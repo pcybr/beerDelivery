@@ -3,8 +3,12 @@ models:
     external_links:
       -  mysql:db
     volumes:
-      - ~/cs4501:/app
+      - .:/app
     ports:
       - "8001:8000"
-    command: bash -c "mod_wsgi-express start-server --working-directory ~/cs4501/app/beerDelivery --reload-on-changes ~/cs4501/app/beerDelivery/beerDelivery/beerDelivery/wsgi.py"
+    command: >
+        bash -c "cd beerDelivery && python manage.py makemigrations && python3 manage.py migrate
+        && python manage.py loaddata db.json
+        && mod_wsgi-express start-server --working-directory ./app/beerDelivery --reload-on-changes ./app/beerDelivery/beerDelivery/beerDelivery/wsgi.py"
+    tty: true
 

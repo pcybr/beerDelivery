@@ -7,6 +7,12 @@ class Person(models.Model):
 	name = models.CharField(max_length = 90);
 	age = models.PositiveIntegerField();
 
+	def __str__(self):
+	    """
+	    String for representing the Model object (in Admin site etc.)
+	    """
+	    return self.name
+
 class Beer(models.Model):
 	TOPS = (
 		('Twist-Off', 'Twist-Off'),
@@ -27,16 +33,34 @@ class Beer(models.Model):
 	beer_type = models.CharField(verbose_name = 'Beer Type', choices = TYPES, max_length = 30);
 	bottle_type = models.CharField(verbose_name = 'Bottle Type', choices = TOPS, max_length = 30);
 
+	def __str__(self):
+	    """
+	    String for representing the Model object (in Admin site etc.)
+	    """
+	    return self.name
+
 class Store(models.Model):
 	store_id = models.AutoField(primary_key=True);
 	inventory = models.ManyToManyField(Beer);
 	location = models.CharField(max_length = 100);
 	name = models.CharField(max_length = 100);
 
+	def __str__(self):
+	    """
+	    String for representing the Model object (in Admin site etc.)
+	    """
+	    return self.name
+
 class Order(models.Model):
 	order_id = models.AutoField(primary_key=True);
 	buyer = models.ForeignKey(Person);
 	item = models.ForeignKey(Beer);
+
+	def __str__(self):
+	    """
+	    String for representing the Model object (in Admin site etc.)
+	    """
+	    return str(self.order_id)
 
 class Trip(models.Model):
 	trip_id = models.AutoField(primary_key=True);
@@ -47,4 +71,8 @@ class Trip(models.Model):
 	active = models.BooleanField();
 	orders = models.ManyToManyField(Order);
 
-
+	def __str__(self):
+	    """
+	    String for representing the Model object (in Admin site etc.)
+	    """
+	    return str(self.trip_id)
