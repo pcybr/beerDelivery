@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 from .models import Person, Beer, Store, Order, Trip
+from django.views.generic.edit import DeleteView
 
 def index(request):
     return HttpResponse("Hello, world. You're at Myapps index.")
@@ -47,3 +48,7 @@ def ApiOrderGetView(request, pk=None):
 	item = order.item
 	return JsonResponse({'order':order,'buyer':buyer, 'item':item})
 
+def ApiPersonDeleteView(request, pk=None):
+	person = Person.objects.get(pk=pk)
+    person.delete()
+    return HttpResponse("Deleted!")
