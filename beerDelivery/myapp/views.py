@@ -6,7 +6,7 @@ from django.views.generic.edit import DeleteView
 from .forms import PersonForm, BeerForm, StoreForm, TripForm, OrderForm
 
 def index(request):
-    return HttpResponse("Hello, world. You're at Myapps index.")
+	return HttpResponse("Hello, world. You're at Myapps index.")
 
 def ApiPersonGetView(request, pk=None):
 	person = Person.objects.get(pk=pk)
@@ -48,8 +48,8 @@ def ApiOrderGetView(request, pk=None):
 
 def ApiPersonDeleteView(request, pk=None):
 	person = Person.objects.get(pk=pk)
-    person.delete()
-    return HttpResponse("Deleted!")
+	person.delete()
+	return HttpResponse("Deleted!")
 
 def ApiCreatePerson(request):
 	if request.method == 'POST':
