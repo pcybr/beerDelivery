@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
 from .models import Person, Beer, Store, Order, Trip
+from .forms import PersonForm, BeerForm, StoreForm, TripForm, OrderForm
 
 def index(request):
     return HttpResponse("Hello, world. You're at Myapps index.")
@@ -20,3 +21,19 @@ def ApiBeerGetView(request, pk=None):
 	price = beer.price
 	bottle_type = beer.bottle_type
 	return JsonResponse({'name':name,'beer_type':beer_type, 'size':size, 'price':price, 'bottle_type':bottle_type})
+
+def ApiCreatePerson(request):
+	if request.method == 'POST':
+		form = PersonForm(request.POST)
+		if form.is_valid():
+			person = Person()
+			person.name = form.cleaned_data['name']
+			person.age = form.cleaned_data['age']
+			person.save()
+
+			return redirect(person)
+	else:
+		form = PersonForm()
+
+	return render(request, 'myapp/person_form.html', {'form': form})
+
