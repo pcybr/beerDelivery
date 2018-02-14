@@ -12,6 +12,9 @@ class Person(models.Model):
 	    String for representing the Model object (in Admin site etc.)
 	    """
 	    return self.name
+    
+	def get_absolute_url(self):
+		return reverse('person_get', args=[str(self.id)])
 
 class Beer(models.Model):
 	TOPS = (
@@ -65,7 +68,6 @@ class Order(models.Model):
 class Trip(models.Model):
 	trip_id = models.AutoField(primary_key=True);
 	runner = models.ForeignKey(Person, related_name = 'runner_person');
-	buyers = models.ManyToManyField(Person);
 	store = models.ForeignKey(Store);
 	time_created = models.DateTimeField(auto_now_add = True);
 	active = models.BooleanField();
