@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from .models import Person, Beer, Store, Order, Trip
 from django.views.generic.edit import DeleteView
 from .forms import PersonForm, BeerForm, StoreForm, TripForm, OrderForm
+from django.urls import reverse_lazy, reverse
 
 def index(request):
 	return HttpResponse("Hello, world. You're at Myapps index.")
@@ -46,10 +47,10 @@ def ApiOrderGetView(request, pk=None):
 	item = order.item
 	return JsonResponse({'order':order,'buyer':buyer, 'item':item})
 
-def ApiPersonDeleteView(request, pk=None):
-	person = Person.objects.get(pk=pk)
-	person.delete()
-	return HttpResponse("Deleted!")
+def ApiPersonDeleteView(DeleteView, pk=None):
+	model = Person
+	success_url = reverse_lazy('index')
+	return HttpResponse('Deleted!')
 
 def ApiCreatePerson(request):
 	if request.method == 'POST':

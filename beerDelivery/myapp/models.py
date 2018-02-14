@@ -14,7 +14,7 @@ class Person(models.Model):
 	    return self.name
     
 	def get_absolute_url(self):
-		return reverse('person_get', args=[str(self.id)])
+		return reverse('person_get', args=[str(self.person_id)])
 
 class Beer(models.Model):
 	TOPS = (
