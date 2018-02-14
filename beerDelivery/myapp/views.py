@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
 from .models import Person, Beer, Store, Order, Trip
 from django.views.generic.edit import DeleteView
+from .forms import PersonForm, BeerForm, StoreForm, TripForm, OrderForm
 
 def index(request):
     return HttpResponse("Hello, world. You're at Myapps index.")
@@ -29,7 +30,6 @@ def ApiStoreGetView(request, pk=None):
 	name = store.name
 	return JsonResponse({'name':name,'inventory':inv, 'location':location})
 
-
 def ApiTripGetView(request, pk=None):
 	trip = Trip.objects.get(pk=pk)
 	runner = trip.runner.name
@@ -39,8 +39,6 @@ def ApiTripGetView(request, pk=None):
 	active = trip.active
 	orders = trip.orders
 	return JsonResponse({'runner':runner,'buyers':buyers, 'store':store, 'time':time_created, 'active':active, 'orders':orders})
-
-
 
 def ApiOrderGetView(request, pk=None):
 	order = Order.objects.get(pk=pk)
@@ -52,3 +50,18 @@ def ApiPersonDeleteView(request, pk=None):
 	person = Person.objects.get(pk=pk)
     person.delete()
     return HttpResponse("Deleted!")
+
+def ApiCreatePerson(request):
+	if request.method == 'POST':
+		form = PersonForm(request.POST)
+		if form.is_valid():
+			person = Person()
+			person.name = form.cleaned_data['name']
+			person.age = form.cleaned_data['age']
+			person.save()
+
+			return redirect(person)
+	else:
+		form = PersonForm()
+
+	return render(request, 'myapp/person_form.html', {'form': form})
