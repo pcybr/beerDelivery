@@ -1,0 +1,10 @@
+<h1>Update Order: "{{ order_buyer }}'s Order"</h1>
+<br>
+<form action="" method="post" enctype= "multipart/form-data">
+    {% csrf_token %}
+    <table id="no">
+    {{ form.as_table }}
+    </table>
+    <input type="submit" class="btn" name="submit">
+
+</form>
