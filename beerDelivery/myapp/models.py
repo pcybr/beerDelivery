@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -14,7 +15,8 @@ class Person(models.Model):
 	    return self.name
     
 	def get_absolute_url(self):
-		return reverse('person_get', args=[str(self.id)])
+		return reverse('person_get', args=[str(self.person_id)])
+
 
 class Beer(models.Model):
 	TOPS = (
@@ -42,17 +44,26 @@ class Beer(models.Model):
 	    """
 	    return self.name
 
+	def get_absolute_url(self):
+		return reverse('beer_get', args=[str(self.beer_id)])
+
+
 class Store(models.Model):
-	store_id = models.AutoField(primary_key=True);
-	inventory = models.ManyToManyField(Beer);
-	location = models.CharField(max_length = 100);
-	name = models.CharField(max_length = 100);
+	store_id = models.AutoField(primary_key=True)
+	Inventory = models.ManyToManyField(Beer);
+	#inventory = models.CharField(max_length = 100)
+	location = models.CharField(max_length = 100)
+	name = models.CharField(max_length = 100)
 
 	def __str__(self):
 	    """
 	    String for representing the Model object (in Admin site etc.)
 	    """
 	    return self.name
+
+	def get_absolute_url(self):
+		return reverse('store_get', args=[str(self.store_id)])
+
 
 class Order(models.Model):
 	order_id = models.AutoField(primary_key=True);
@@ -65,6 +76,10 @@ class Order(models.Model):
 	    """
 	    return str(self.order_id)
 
+	def get_absolute_url(self):
+		return reverse('order_get', args=[str(self.order_id)])
+
+ 
 class Trip(models.Model):
 	trip_id = models.AutoField(primary_key=True);
 	runner = models.ForeignKey(Person, related_name = 'runner_person');
@@ -78,3 +93,11 @@ class Trip(models.Model):
 	    String for representing the Model object (in Admin site etc.)
 	    """
 	    return str(self.trip_id)
+
+	def get_absolute_url(self):
+		return reverse('trip_get', args=[str(self.trip_id)])
+
+
+
+
+
