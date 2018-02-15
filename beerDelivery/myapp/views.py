@@ -65,7 +65,7 @@ def ApiBeerDeleteView(DeleteView, pk=None):
 		model.delete(beer);
 		return JsonResponse({'name':name, 'size':size})
 	except:
-		return JsonResponse({'error': 404, 'message': 'User does not exist.'})
+		return JsonResponse({'error': 404, 'message': 'Beer does not exist.'})
 
 def ApiStoreDeleteView(DeleteView, pk=None):
 	try:
@@ -76,7 +76,7 @@ def ApiStoreDeleteView(DeleteView, pk=None):
 		model.delete(store);
 		return JsonResponse({'name':name, 'location':location})
 	except:
-		return JsonResponse({'error': 404, 'message': 'User does not exist.'})
+		return JsonResponse({'error': 404, 'message': 'Store does not exist.'})
 
 def ApiTripDeleteView(DeleteView, pk=None):
 	try:
@@ -87,7 +87,7 @@ def ApiTripDeleteView(DeleteView, pk=None):
 		model.delete(trip);
 		return JsonResponse({'name':name, 'store':store})
 	except:
-		return JsonResponse({'error': 404, 'message': 'User does not exist.'})
+		return JsonResponse({'error': 404, 'message': 'Trip does not exist.'})
 
 def ApiOrderDeleteView(DeleteView, pk=None):
 	try:	
@@ -98,7 +98,7 @@ def ApiOrderDeleteView(DeleteView, pk=None):
 		model.delete(order);
 		return JsonResponse({'name':name, 'item':item})
 	except:
-		return JsonResponse({'error': 404, 'message': 'User does not exist.'})
+		return JsonResponse({'error': 404, 'message': 'Order does not exist.'})
 
 def ApiCreatePerson(request):
 	if request.method == 'POST':
