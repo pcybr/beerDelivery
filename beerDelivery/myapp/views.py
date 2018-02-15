@@ -45,10 +45,60 @@ def ApiOrderGetView(request, pk=None):
 	item = order.item.name
 	return JsonResponse({'order':order.order_id,'buyer':buyer, 'item':item})
 
-def ApiPersonDeleteView(request, pk=None):
-	person = Person.objects.get(pk=pk)
-	person.delete()
-	return HttpResponse("Deleted!")
+def ApiPersonDeleteView(DeleteView, pk=None):
+	try:
+		model = Person
+		person = Person.objects.get(pk=pk)
+		name = person.name
+		age = person.age
+		model.delete(person);
+		return JsonResponse({'name':name, 'age':age})
+	except:
+		return JsonResponse({'error': 404, 'message': 'User does not exist.'})
+
+def ApiBeerDeleteView(DeleteView, pk=None):
+	try:	
+		model = Beer
+		beer = Beer.objects.get(pk=pk)
+		name = beer.name
+		size = beer.size
+		model.delete(beer);
+		return JsonResponse({'name':name, 'size':size})
+	except:
+		return JsonResponse({'error': 404, 'message': 'User does not exist.'})
+
+def ApiStoreDeleteView(DeleteView, pk=None):
+	try:
+		model = Store
+		store = Store.objects.get(pk=pk)
+		name = store.name
+		location = store.location
+		model.delete(store);
+		return JsonResponse({'name':name, 'location':location})
+	except:
+		return JsonResponse({'error': 404, 'message': 'User does not exist.'})
+
+def ApiTripDeleteView(DeleteView, pk=None):
+	try:
+		model = Trip
+		trip = Trip.objects.get(pk=pk)
+		name = trip.runner
+		store = trip.store
+		model.delete(trip);
+		return JsonResponse({'name':name, 'store':store})
+	except:
+		return JsonResponse({'error': 404, 'message': 'User does not exist.'})
+
+def ApiOrderDeleteView(DeleteView, pk=None):
+	try:	
+		model = Order
+		order = Order.objects.get(pk=pk)
+		name = order.buyer
+		item = order.item
+		model.delete(order);
+		return JsonResponse({'name':name, 'item':item})
+	except:
+		return JsonResponse({'error': 404, 'message': 'User does not exist.'})
 
 def ApiCreatePerson(request):
 	if request.method == 'POST':
@@ -131,6 +181,38 @@ def ApiCreateTrip(request):
 		form = TripForm()
 
 	return render(request, 'myapp/trip_form.html', {'form': form})
+
+def ApiDeletePerson(DeleteView,  pk=None):
+	model = Person
+	person = Person.objects.get(pk=pk)
+	name = person.name
+	age = person.age
+	return JsonResponse({'person':person, 'name':name, 'age': age})
+
+def ApiDeleteBeer(DeleteView, pk=None):
+	model = Beer
+	beer = Beer.objects.get(pk=pk)
+	name = beer.name
+	return JsonResponse({'beer':beer, 'name':name})
+
+def ApiDeleteStore(DeleteView, pk=None):
+	model = Store
+	store = Order.objects.get(pk=pk)
+	name = store.name
+	return JsonResponse({'store':store, 'name':name})
+
+def ApiDeleteOrder(DeleteView, pk=None):
+	model = Order
+	order = Order.objects.get(pk=pk)
+	buyer = buyer.name
+	return JsonResponse({'order':order, 'buyer':buyer})
+
+def ApiDeleteTrip(DeleteView, pk=None):
+	model = Trip
+	trip = Trip.objects.get(pk=pk)
+	runner = runner.name
+	return JsonResponse({'trip':trip, 'store':store})
+
 
 def ApiUpdatePerson(request, pk):
 	person = Person.objects.get(pk=pk)
