@@ -50,7 +50,8 @@ class Beer(models.Model):
 
 class Store(models.Model):
 	store_id = models.AutoField(primary_key=True)
-	#Inventory = models.ManyToManyField(Beer);
+	#inventory = models.ManyToManyField(Beer);
+	inventory = models.CharField(max_length = 100)
 	location = models.CharField(max_length = 100)
 	name = models.CharField(max_length = 100)
 
