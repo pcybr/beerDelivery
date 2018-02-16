@@ -8,6 +8,7 @@ models:
       - "8001:8000"
     command: >
         bash -c "python /app/beerDelivery/manage.py makemigrations 
+        && python /app/beerDelivery/manage.py makemigrations myapp
         && python /app/beerDelivery/manage.py migrate
         && python /app/beerDelivery/manage.py loaddata /app/beerDelivery/db.json && pwd
         && mod_wsgi-express start-server --working-directory /app/beerDelivery --reload-on-changes /app/beerDelivery/beerDelivery/wsgi.py"
