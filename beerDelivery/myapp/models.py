@@ -53,7 +53,7 @@ class Store(models.Model):
 	#inventory = models.ManyToManyField(Beer);
 	inventory = models.CharField(max_length = 100)
 	location = models.CharField(max_length = 100)
-	name = models.CharField(max_length = 100)
+	name = modelsCharField(max_length = 100)
 
 	def __str__(self):
 	    """

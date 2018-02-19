@@ -9,56 +9,123 @@ def index(request):
 	return HttpResponse("Hello, world. You're at Myapps index.")
 
 def ApiPersonGetView(request, pk=None):
-	try:
+	if request.method == 'GET':
+		try:
+			person = Person.objects.get(pk=pk)
+			name = person.name
+			age = person.age
+			return JsonResponse({'name':name, 'age':age})
+		except:
+			return JsonResponse({'error': 404, 'message': 'Person does not exist'})
+	else:
 		person = Person.objects.get(pk=pk)
-		name = person.name
-		age = person.age
-		return JsonResponse({'name':name, 'age':age})
-	except:
-		return JsonResponse({'error': 404, 'message': 'Person does not exist'})
+		form = PersonForm(request.POST)
+		if form.is_valid():
+			person.name = form.cleaned_data['name']
+			person.age = form.cleaned_data['age']
+			person.save()
+			return redirect(person)
+		else:
+			return JsonResponse({'error': 400, 'message': 'Invalid Input'})
+
+
 
 def ApiBeerGetView(request, pk=None):
-	try:
+	if request.method == 'GET':	
+		try:
+			beer = Beer.objects.get(pk=pk)
+			beer_type = beer.beer_type
+			size = beer.size
+			name = beer.name
+			price = beer.price
+			bottle_type = beer.bottle_type
+			return JsonResponse({'name':name,'beer_type':beer_type, 'size':size, 'price':price, 'bottle_type':bottle_type})
+		except:
+				return JsonResponse({'error': 404, 'message': 'Beer does not exist'})
+	else:
 		beer = Beer.objects.get(pk=pk)
-		beer_type = beer.beer_type
-		size = beer.size
-		name = beer.name
-		price = beer.price
-		bottle_type = beer.bottle_type
-		return JsonResponse({'name':name,'beer_type':beer_type, 'size':size, 'price':price, 'bottle_type':bottle_type})
-	except:
-			return JsonResponse({'error': 404, 'message': 'Beer does not exist'})
+		form = BeerForm(request.POST)
+		if form.is_valid():
+			beer.size = form.cleaned_data['size']
+			beer.name = form.cleaned_data['name']
+			beer.price = form.cleaned_data['price']
+			beer.beer_type = form.cleaned_data['beer_type']
+			beer.bottle_type = form.cleaned_data['bottle_type']
+			beer.save()
+			return redirect(beer)
+		else:
+			return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
 def ApiStoreGetView(request, pk=None):
-	try:
+	if request.method == 'GET':
+		try:
+			store = Store.objects.get(pk=pk)
+			inv = store.inventory
+			location = store.location
+			name = store.name
+			return JsonResponse({'name':name,'inventory':inv, 'location':location})
+		except:
+				return JsonResponse({'error': 404, 'message': 'Store does not exist'})
+	else:
 		store = Store.objects.get(pk=pk)
-		inv = store.inventory
-		location = store.location
-		name = store.name
-		return JsonResponse({'name':name,'inventory':inv, 'location':location})
-	except:
-			return JsonResponse({'error': 404, 'message': 'Store does not exist'})
+		form = StoreForm(request.POST)
+		if form.is_valid():
+			store.inventory = form.cleaned_data['inventory']
+			store.name = form.cleaned_data['name']
+			store.location = form.cleaned_data['location']
+			store.save()
+			return redirect(store)
+		else:
+			return JsonResponse({'error': 400, 'message': 'Invalid Input'})
+
 
 def ApiTripGetView(request, pk=None):
-	try:
-		trip = Trip.objects.get(pk=pk)
-		runner = trip.runner.name
-		store = trip.store.name
-		time_created = trip.time_created
-		active = trip.active
-		#orders = trip.orders
-		return JsonResponse({'runner':runner, 'store':store, 'time':time_created, 'active':active})
-	except:
+	if request.method == 'GET':	
+		try:
+			trip = Trip.objects.get(pk=pk)
+			runner = trip.runner.name
+			store = trip.store.name
+			time_created = trip.time_created
+			active = trip.active
+			#orders = trip.orders
+			return JsonResponse({'runner':runner, 'store':store, 'time':time_created, 'active':active})
+		except:
 			return JsonResponse({'error': 404, 'message': 'Trip does not exist'})
+	else:
+		trip = Trip.objects.get(pk=pk)
+		form = TripForm(request.POST)
+		if form.is_valid():
+		#trip.runner = request.user
+			trip.runner = form.cleaned_data['runner']
+			trip.store = form.cleaned_data['store']
+			trip.active = True
+			trip.save()
+			return redirect(trip)
+		else:
+			return JsonResponse({'error': 400, 'message': 'Invalid Input'})
+
 
 def ApiOrderGetView(request, pk=None):
-	try:
-		order = Order.objects.get(pk=pk)
-		buyer = order.buyer.name
-		item = order.item.name
-		return JsonResponse({'order':order.order_id,'buyer':buyer, 'item':item})
-	except:
-			return JsonResponse({'error': 404, 'message': 'Order does not exist'})
+	if request.method == 'GET':
+		try:
+			order = Order.objects.get(pk=pk)
+			buyer = order.buyer.name
+			item = order.item.name
+			return JsonResponse({'order':order.order_id,'buyer':buyer, 'item':item})
+		except:
+				return JsonResponse({'error': 404, 'message': 'Order does not exist'})
+	else:
+		trip = Trip.objects.get(pk=pk)
+		form = TripForm(request.POST)
+		if form.is_valid():
+			#trip.runner = request.user
+			trip.runner = form.cleaned_data['runner']
+			trip.store = form.cleaned_data['store']
+			trip.active = True
+			trip.save()
+			return redirect(trip)
+		else:
+			return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
 def ApiPersonDeleteView(DeleteView, pk=None):
 	try:
