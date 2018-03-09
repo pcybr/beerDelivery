@@ -15,13 +15,16 @@ def index(request):
 	return JsonResponse(data)
 
 def getPerson(request,pk = None):
-	endpoint = "http://exp-api:8000/person/" + str(pk)
-	req = urllib.request.Request(endpoint)
-	response = urllib.request.urlopen(req).read().decode('utf-8')
-	data = json.loads(response)
-	name = data['name']
-	age = data['age']
-	return render(request,'person_detail_view.html',context={'name':name,'age':age})
+	try: 
+		endpoint = "http://exp-api:8000/person/" + str(pk)
+		req = urllib.request.Request(endpoint)
+		response = urllib.request.urlopen(req).read().decode('utf-8')
+		data = json.loads(response)
+		name = data['name']
+		age = data['age']
+		return render(request,'person_detail_view.html',context={'name':name,'age':age})
+	except: 
+		return render(request,'person_no_exist.html')
 
 def getOrder(request,pk = None):
 	endpoint = "http://exp-api:8000/order/" + str(pk)
