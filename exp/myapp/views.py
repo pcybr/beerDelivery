@@ -34,6 +34,12 @@ def getOrder(request,pk = None):
 	View Function for individual order
 	'''
 	endpoint = "http://models-api:8000/api/v1/order/" + str(pk)
+
+def getBeer(index,pk = None):
+	'''
+	View Function for individual beer
+	'''
+	endpoint = "http://models-api:8000/api/v1/beer/" + str(pk)
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
 	data = json.loads(response)
@@ -44,6 +50,16 @@ def getTrip(request,pk = None):
 	View Function for individual trip
 	'''
 	endpoint = "http://models-api:8000/api/v1/trip/" + str(pk)
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	return JsonResponse(data)
+
+def getStore(index,pk = None):
+	'''
+	View Function for individual store
+	'''
+	endpoint = "http://models-api:8000/api/v1/store/" + str(pk)
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
 	data = json.loads(response)
