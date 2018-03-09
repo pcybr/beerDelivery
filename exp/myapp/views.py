@@ -34,6 +34,10 @@ def getOrder(request,pk = None):
 	View Function for individual order
 	'''
 	endpoint = "http://models-api:8000/api/v1/order/" + str(pk)
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	return JsonResponse(data)
 
 def getBeer(index,pk = None):
 	'''
