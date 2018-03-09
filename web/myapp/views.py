@@ -24,7 +24,8 @@ def getPerson(request,pk = None):
 		age = data['age']
 		return render(request,'person_detail_view.html',context={'name':name,'age':age})
 	except: 
-		return render(request,'person_no_exist.html')
+		obj = 'PERSON'
+		return render(request,'person_no_exist.html',context={'object':obj})
 
 def getOrder(request,pk = None):
 	endpoint = "http://exp-api:8000/order/" + str(pk)
