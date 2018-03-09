@@ -14,9 +14,11 @@ def index(request):
 	# string = "HERE--- " + req
 	return JsonResponse(data)
 
-def getPerson(index,pk = None):
+def getPerson(request,pk = None):
 	endpoint = "http://exp-api:8000/person/" + str(pk)
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
 	data = json.loads(response)
-	return JsonResponse(data)
+	name = data['name']
+	age = data['age']
+	return render(request,'person_detail_view.html',context={'name':name,'age':age})
