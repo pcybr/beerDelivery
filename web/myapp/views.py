@@ -37,19 +37,8 @@ def getTrip(request,pk = None):
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
 	data = json.loads(response)
-	try:
-		runner = data['runner']
-		store = data['store']
-		time_created = data['time']
-		active = data['active']
-		error = ""
-		message = ""
-		# orders = data['orders']
-	except:
-		runner = ''
-		store = ''
-		time_created = ''
-		active = ''
-		error = data['error']
-		message = data['message']
-	return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'error':error,'message':message})
+	runner = data['runner']
+	store = data['store']
+	time_created = data['time']
+	active = data['active']
+	return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,})
