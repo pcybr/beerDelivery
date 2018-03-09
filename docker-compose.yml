@@ -22,8 +22,7 @@ exp:
    volumes:
       - ./:/app
    command: >
-        bash -c "ls /app
-        && mod_wsgi-express start-server --working-directory /app/exp --reload-on-changes /app/exp/exp/wsgi.py"
+        bash -c "mod_wsgi-express start-server --working-directory /app/exp --reload-on-changes /app/exp/exp/wsgi.py"
 
 web:
    image: tp33/django
@@ -34,5 +33,4 @@ web:
    volumes:
       - ./:/app
    command: >
-        bash -c "ls
-        && mod_wsgi-express start-server --working-directory /app/web --reload-on-changes /app/web/web/wsgi.py"
+        bash -c "mod_wsgi-express start-server --working-directory /app/web --reload-on-changes /app/web/web/wsgi.py"

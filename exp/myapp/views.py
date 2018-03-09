@@ -19,11 +19,31 @@ def index(request,pk=None):
 
 	return render(request,'index.html',context={},)
 
-def getPerson(index,pk = None):
+def getPerson(request,pk = None):
 	'''
 	View Function for individual person
 	'''
 	endpoint = "http://models-api:8000/api/v1/person/" + str(pk)
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	return JsonResponse(data)
+
+def getOrder(request,pk = None):
+	'''
+	View Function for individual order
+	'''
+	endpoint = "http://models-api:8000/api/v1/order/" + str(pk)
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	return JsonResponse(data)
+
+def getTrip(request,pk = None):
+	'''
+	View Function for individual trip
+	'''
+	endpoint = "http://models-api:8000/api/v1/trip/" + str(pk)
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
 	data = json.loads(response)

@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+{% if error.strip%}
+  <p><strong>Runner Name: </strong> {{ runner }}</p>
+  <p><strong>Store:</strong> {{ store }}</p> 
+  <p><strong>Time_created:</strong> {{ time_created }}</p> 
+  <p><strong>Active:</strong> {{ active }}</p> 
+  <!-- <p><strong>Orders:</strong> {{ orders }}</p> -->
+{% else %}
+	<p><strong>Error: </strong> {{ error }}</p>
+	<p><strong>Message:</strong> {{ message }}</p>
+{% endif %}
+{% endblock %}
