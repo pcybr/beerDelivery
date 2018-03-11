@@ -509,4 +509,10 @@ def ApiUpdateTrip(request, pk):
 
 # 	return render(request, 'myapp/trip_update.html', {'form': form, 'trip_runner': trip.runner})
 
+def ApiAllPersons(request):
+	people = Person.objects.all()
+	resp = []
+	for thePeople in people:
+		resp.append(thePeople.person_id)
+	return JsonResponse(resp, safe = False)
 

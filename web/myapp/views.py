@@ -8,11 +8,11 @@ import urllib.request
 import json
 
 def index(request):
-	req = urllib.request.Request('http://exp-api:8000/index/')
-	response = urllib.request.urlopen(req).read().decode('utf-8')
-	data = json.loads(response)
+	# req = urllib.request.Request('http://exp-api:8000/index/')
+	# response = urllib.request.urlopen(req).read().decode('utf-8')
+	# data = json.loads(response)
 	# string = "HERE--- " + req
-	return JsonResponse(data)
+	return render(request, 'base_generic.html', context={})
 
 def getPerson(request,pk = None):
 	try: 
@@ -84,6 +84,26 @@ def getStore(request,pk = None):
 	except: 
 		obj = 'Store'
 		return render(request,'no_exist.html',context={'object':obj})
+
+
+def getAllPeople(request, pk = None):
+	endpoint = "http://exp-api:8000/person/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = {}
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/person/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		name = data2['name']
+		full_list[name] = keys
+	return render(request, 'people.html', context={'full_list':full_list})
+
+
+
 
 
 

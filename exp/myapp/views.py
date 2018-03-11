@@ -39,7 +39,7 @@ def getOrder(request,pk = None):
 	data = json.loads(response)
 	return JsonResponse(data)
 
-def getBeer(index,pk = None):
+def getBeer(request,pk = None):
 	'''
 	View Function for individual beer
 	'''
@@ -59,7 +59,7 @@ def getTrip(request,pk = None):
 	data = json.loads(response)
 	return JsonResponse(data)
 
-def getStore(index,pk = None):
+def getStore(request,pk = None):
 	'''
 	View Function for individual store
 	'''
@@ -68,3 +68,13 @@ def getStore(index,pk = None):
 	response = urllib.request.urlopen(req).read().decode('utf-8')
 	data = json.loads(response)
 	return JsonResponse(data)
+
+
+def getAllPeople(request, pk = None):
+	endpoint = "http://models-api:8000/api/v1/person/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	new_list = data
+	return JsonResponse(new_list, safe = False)
+

@@ -8,4 +8,6 @@ urlpatterns = [
 	url(r'^trip/(?P<pk>\d+)$', views.getTrip, name = 'get_trip'),
 	url(r'^beer/(?P<pk>\d+)$', views.getBeer, name = 'get_beer'),
 	url(r'^store/(?P<pk>\d+)$', views.getStore, name = 'get_store'),
+
+	url(r'^person/all$', views.getAllPeople, name = 'get_all_people'),
 ]
