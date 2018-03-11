@@ -27,6 +27,7 @@ class TestPerson(TestCase):
 		resp = json.loads((response.content).decode("utf-8"))
 		self.assertEquals(response.status_code, 200)
 		self.assertEquals(resp['name'],'Peter')
+		self.assertEquals(resp['age'],20)
 		
 
 	#tearDown method is called after each test

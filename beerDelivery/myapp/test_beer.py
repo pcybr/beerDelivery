@@ -27,6 +27,11 @@ class TestBeer(TestCase):
 		resp = json.loads((response.content).decode("utf-8"))
 		self.assertEquals(response.status_code, 200)
 		self.assertEquals(resp['name'],'Bud Light')
+		self.assertEquals(resp['size'],100)
+		self.assertEquals(resp['bottle_type'],'Can')
+		self.assertEquals(resp['beer_type'],'Light')
+		self.assertEquals(resp['price'],12)
+
 		
 
 	#tearDown method is called after each test

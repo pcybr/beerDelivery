@@ -12,12 +12,12 @@ class TestTrip(TestCase):
 		# os.system('python /app/beerDelivery/beerDelivery/manage.py loaddata db.json')
 		# call_command("loaddata", "/app/beerDelivery/beerDelivery/db.json")
 
-		Person.objects.create(name='Peter',age='20',person_id='200')
-		Beer.objects.create(name='Bud Light',size=100,beer_id=1,bottle_type='Can',beer_type='Light',price=12)
-		Store.objects.create(store_id=2,location='New York',inventory='Everything',name='Heaven')
-		Order.objects.create(buyer='200',item=1,order_id='17')
+		
+		# Beer.objects.create(name='Bud Light',size=100,beer_id=1,bottle_type='Can',beer_type='Light',price=12)
+		
+		
 
-		Trip.objects.create(trip_id='12',runner=200,store=2,active=True,orders=17)
+		Trip.objects.create(trip_id=12,runner=Person.objects.create(name='Peter',age=20,person_id=200),store=Store.objects.create(store_id=2,location='New York',inventory='Everything',name='Heaven'),active=True)
 		
 		pass #nothing to set up 
 
@@ -31,7 +31,9 @@ class TestTrip(TestCase):
 		response = self.client.get(reverse('trip_get', args=['12']))
 		resp = json.loads((response.content).decode("utf-8"))
 		self.assertEquals(response.status_code, 200)
-		self.assertEquals(resp['buyer'].name,'Peter')
+		self.assertEquals(resp['runner'],'Peter')
+		self.assertEquals(resp['store'],'Heaven')
+		self.assertEquals(resp['active'],True)
 		
 
 	#tearDown method is called after each test

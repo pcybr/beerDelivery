@@ -27,6 +27,8 @@ class TestStore(TestCase):
 		resp = json.loads((response.content).decode("utf-8"))
 		self.assertEquals(response.status_code, 200)
 		self.assertEquals(resp['name'],'Heaven')
+		self.assertEquals(resp['location'],'New York')
+		self.assertEquals(resp['inventory'],'Everything')
 		
 
 	#tearDown method is called after each test

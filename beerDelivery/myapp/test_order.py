@@ -12,10 +12,9 @@ class TestOrder(TestCase):
 		# os.system('python /app/beerDelivery/beerDelivery/manage.py loaddata db.json')
 		# call_command("loaddata", "/app/beerDelivery/beerDelivery/db.json")
 
-		Person.objects.create(name='Peter',age=20,person_id=200)
-		Beer.objects.create(name='Bud Light',size=100,beer_id=1,bottle_type='Can',beer_type='Light',price=12)
+		
 
-		Order.objects.create(buyer=200,item=1,order_id=17)
+		Order.objects.create(buyer=Person.objects.create(name='Peter',age=20,person_id=200),item=Beer.objects.create(name='Bud Light',size=100,beer_id=1,bottle_type='Can',beer_type='Light',price=12),order_id=17)
 		
 		pass #nothing to set up 
 
@@ -29,7 +28,8 @@ class TestOrder(TestCase):
 		response = self.client.get(reverse('order_get', args=['17']))
 		resp = json.loads((response.content).decode("utf-8"))
 		self.assertEquals(response.status_code, 200)
-		self.assertEquals(resp['buyer'].name,'Peter')
+		self.assertEquals(resp['buyer'],'Peter')
+		self.assertEquals(resp['item'],'Bud Light')
 		
 
 	#tearDown method is called after each test
