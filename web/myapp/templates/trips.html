@@ -2,6 +2,6 @@
 
 {% block content %}
 {% for trip,pk in full_list.items %}
-<a href="/trip/{{ pk }}"><h2>{{ trip }}</h2></a>
+<a href="/trip/{{ pk }}"><h2>{{ trip }} current trip.</h2></a>
 {% endfor %}
 {% endblock %}

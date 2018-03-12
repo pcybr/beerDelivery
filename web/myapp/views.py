@@ -12,7 +12,7 @@ def index(request):
 	# response = urllib.request.urlopen(req).read().decode('utf-8')
 	# data = json.loads(response)
 	# string = "HERE--- " + req
-	return render(request, 'base_generic.html', context={})
+	return render(request, 'index.html', context={})
 
 def getPerson(request,pk = None):
 	try: 
