@@ -30,7 +30,13 @@ class TestStore(TestCase):
 		self.assertEquals(resp['name'],'Heaven')
 		self.assertEquals(resp['location'],'New York')
 		self.assertEquals(resp['inventory'],'Everything')
-		
+	
+	# User Story 10
+	def test_all_stores(self):
+		response = self.client.get('/api/v1/store/all')
+		resp = json.loads((response.content).decode("utf-8"))
+		self.assertEquals(resp,[2])
+
 
 	#tearDown method is called after each test
 	def tearDown(self):
