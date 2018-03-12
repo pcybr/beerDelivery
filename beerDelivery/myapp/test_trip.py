@@ -62,10 +62,7 @@ class TestTrip(TestCase):
 		response1 = self.client.post('/api/v1/trip/12/update',{'runner' : 200, 'store':2, 'active':False})
 		response3 = self.client.get(reverse('trip_get', args=['12']))
 		resp3 = json.loads((response3.content).decode("utf-8"))
-		print(resp3)
 		self.assertEquals(resp3['active'],False)
-
-	# User story 4 can't be completed until Pete finishes
 
 	def test_trip_delete(self):
 		response = self.client.get(reverse('trip_get', args=['12']))
@@ -74,6 +71,12 @@ class TestTrip(TestCase):
 		response = self.client.get(reverse('trip_get', args=['12']))
 		resp = json.loads((response.content).decode("utf-8"))
 		self.assertEquals(resp['error'],404)
+
+	# User story 4
+	def test_all_trips(self):
+		response = self.client.get('/api/v1/trip/all')
+		resp = json.loads((response.content).decode("utf-8"))
+		self.assertEquals(resp,[12])
 		
 
 	#tearDown method is called after each test

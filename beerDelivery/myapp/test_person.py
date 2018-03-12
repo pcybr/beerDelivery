@@ -28,10 +28,24 @@ class TestPerson(TestCase):
 		self.assertEquals(response.status_code, 200)
 		self.assertEquals(resp['name'],'Peter')
 		self.assertEquals(resp['age'],20)
+
+	# User Story 5
+	def test_person_update(self):
+		response = self.client.post('/api/v1/person/200/update',{'name' : "Winston", 'age':21})
+		response1 = self.client.get(reverse('person_get', args=['200']))
+		resp = json.loads((response1.content).decode("utf-8"))
+		self.assertEquals(resp['name'],"Winston")
+		self.assertEquals(resp['age'],21)
+
+	# User Story 6
+	def test_person_delete(self):
+		response = self.client.post('/api/v1/person/200/delete')
+		response1 = self.client.get(reverse('person_get', args=['200']))
+		resp = json.loads((response1.content).decode("utf-8"))
+		self.assertEquals(resp['error'],404)
+		self.assertEquals(resp['message'],"Person does not exist")
 		
 
 	#tearDown method is called after each test
 	def tearDown(self):
 		pass #nothing to tear down
-
-
