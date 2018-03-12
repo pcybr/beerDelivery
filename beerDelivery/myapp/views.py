@@ -423,6 +423,7 @@ def ApiUpdateBeer(request, pk):
 def ApiUpdateStore(request, pk):
 	store = Store.objects.get(pk=pk)
 	form = StoreForm(request.POST)
+	print(form)
 	if form.is_valid():
 		store.inventory = form.cleaned_data['inventory']
 		store.name = form.cleaned_data['name']
@@ -485,7 +486,7 @@ def ApiUpdateTrip(request, pk):
 		#trip.runner = request.user
 		trip.runner = form.cleaned_data['runner']
 		trip.store = form.cleaned_data['store']
-		trip.active = True
+		trip.active = form.cleaned_data['active']
 		trip.save()
 		return redirect(trip)
 	else:
