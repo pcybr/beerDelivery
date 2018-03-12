@@ -37,6 +37,7 @@ class OrderForm(forms.Form):
 class TripForm(forms.Form):
 	store = forms.ModelChoiceField(queryset = Store.objects.all())
 	runner = forms.ModelChoiceField(queryset = Person.objects.all())
+	active = forms.BooleanField(required=False)
 
 
 
