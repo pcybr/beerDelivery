@@ -1,0 +1,7 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{% for people,pk in full_list.items %}
+<a href="/person/{{ pk }}"><h2>{{ people }}</h2></a>
+{% endfor %}
+{% endblock %}

@@ -78,3 +78,36 @@ def getAllPeople(request, pk = None):
 	new_list = data
 	return JsonResponse(new_list, safe = False)
 
+
+def getAllBeers(request, pk = None):
+	endpoint = "http://models-api:8000/api/v1/beer/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	new_list = data
+	return JsonResponse(new_list, safe = False)
+
+def getAllStores(request, pk = None):
+	endpoint = "http://models-api:8000/api/v1/store/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	new_list = data
+	return JsonResponse(new_list, safe = False)
+
+def getAllOrders(request, pk = None):
+	endpoint = "http://models-api:8000/api/v1/order/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	new_list = data
+	return JsonResponse(new_list, safe = False)
+
+def getAllTrips(request, pk = None):
+	endpoint = "http://models-api:8000/api/v1/trip/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	new_list = data
+	return JsonResponse(new_list, safe = False)
+

@@ -1,0 +1,7 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{% for store,pk in full_list.items %}
+<a href="/store/{{ pk }}"><h2>{{ store }}</h2></a>
+{% endfor %}
+{% endblock %}

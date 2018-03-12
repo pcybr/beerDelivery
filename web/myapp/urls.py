@@ -8,5 +8,11 @@ urlpatterns = [
 	url(r'^trip/(?P<pk>\d+)$', views.getTrip, name = 'get_trip'),
 	url(r'^beer/(?P<pk>\d+)$', views.getBeer, name = 'get_beer'),
 	url(r'^store/(?P<pk>\d+)$', views.getStore, name = 'get_store'),
-	url(r'^people/', views.getAllPeople, name = 'all_people')
+
+	url(r'^people/', views.getAllPeople, name = 'all_people'),
+	url(r'^beers/', views.getAllBeers, name = 'all_beers'),
+	url(r'^stores/', views.getAllStores, name = 'all_stores'),
+	url(r'^trips/', views.getAllTrips, name = 'all_trips'),
+	url(r'^orders/', views.getAllOrders, name = 'all_orders'),
+
 ]

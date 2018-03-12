@@ -102,6 +102,70 @@ def getAllPeople(request, pk = None):
 		full_list[name] = keys
 	return render(request, 'people.html', context={'full_list':full_list})
 
+def getAllBeers(request, pk = None):
+	endpoint = "http://exp-api:8000/beer/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = {}
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/beer/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		name = data2['name']
+		full_list[name] = keys
+	return render(request, 'beers.html', context={'full_list':full_list})
+
+def getAllStores(request, pk = None):
+	endpoint = "http://exp-api:8000/store/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = {}
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/store/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		name = data2['name']
+		full_list[name] = keys
+	return render(request, 'stores.html', context={'full_list':full_list})
+
+def getAllTrips(request, pk = None):
+	endpoint = "http://exp-api:8000/trip/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = {}
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/trip/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		name = data2['runner']
+		full_list[name] = keys
+	return render(request, 'trips.html', context={'full_list':full_list})
+
+def getAllOrders(request, pk = None):
+	endpoint = "http://exp-api:8000/order/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = {}
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/order/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		name = data2['order']
+		full_list[name] = keys
+	return render(request, 'orders.html', context={'full_list':full_list})
+
 
 
 

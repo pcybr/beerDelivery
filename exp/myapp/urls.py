@@ -9,5 +9,9 @@ urlpatterns = [
 	url(r'^beer/(?P<pk>\d+)$', views.getBeer, name = 'get_beer'),
 	url(r'^store/(?P<pk>\d+)$', views.getStore, name = 'get_store'),
 
-	url(r'^person/all$', views.getAllPeople, name = 'get_all_people'),
+	url(r'^person/all', views.getAllPeople, name = 'get_all_people'),
+	url(r'^beer/all', views.getAllBeers, name = 'get_all_beers'),
+	url(r'^store/all', views.getAllStores, name = 'get_all_stores'),
+	url(r'^trip/all', views.getAllTrips, name = 'get_all_trips'),
+	url(r'^order/all', views.getAllOrders, name = 'get_all_orders'),
 ]

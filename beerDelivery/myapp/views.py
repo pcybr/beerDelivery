@@ -516,3 +516,38 @@ def ApiAllPersons(request):
 		resp.append(thePeople.person_id)
 	return JsonResponse(resp, safe = False)
 
+def ApiAllBeers(request):
+	beers = Beer.objects.all()
+	resp = []
+	for theBeer in beers:
+		resp.append(theBeer.beer_id)
+	return JsonResponse(resp, safe = False)
+
+def ApiAllOrders(request):
+	orders = Order.objects.all()
+	resp = []
+	for theOrder in orders:
+		resp.append(theOrder.order_id)
+	return JsonResponse(resp, safe = False)
+
+def ApiAllTrips(request):
+	trips = Trip.objects.all()
+	resp = []
+	for theTrip in trips:
+		resp.append(theTrip.trip_id)
+	return JsonResponse(resp, safe = False)
+
+def ApiAllStores(request):
+	stores = Store.objects.all()
+	resp = []
+	for theStore in stores:
+		resp.append(theStore.store_id)
+	return JsonResponse(resp, safe = False)
+
+
+
+
+
+
+
+
