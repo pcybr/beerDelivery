@@ -22,6 +22,7 @@ class TestStore(TestCase):
 		self.assertEquals(response.status_code, 200)
 		self.assertEquals(resp['error'],404)
 
+	# User Story 8
 	def test_store_does_exist(self):
 		response = self.client.get(reverse('store_get', args=['2']))
 		resp = json.loads((response.content).decode("utf-8"))

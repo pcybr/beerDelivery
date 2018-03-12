@@ -10,9 +10,9 @@ class TestPerson(TestCase):
 
 	def setUp(self):
 		# os.system('python /app/beerDelivery/beerDelivery/manage.py loaddata db.json')
-		call_command("loaddata", "/app/beerDelivery/beerDelivery/db.json")
+		# call_command("loaddata", "/app/beerDelivery/beerDelivery/db.json")
 
-		# Person.objects.create(name='Peter',age=20,person_id=200)
+		Person.objects.create(name='Peter',age=20,person_id=200)
 		
 		pass #nothing to set up 
 
@@ -23,12 +23,12 @@ class TestPerson(TestCase):
 		self.assertEquals(resp['error'],404)
 
 	def test_person_does_exist(self):
-		response = self.client.get(reverse('person_get', kwargs = {'pk': 1}))
+		response = self.client.get(reverse('person_get', args=['200']))
 		resp = json.loads((response.content).decode("utf-8"))
 		self.assertEquals(response.status_code, 200)
-		self.assertEquals(resp['name'],'Pete')
-		self.assertEquals(resp['age'],21)
-		print(resp)
+		self.assertEquals(resp['name'],'Peter')
+		self.assertEquals(resp['age'],20)
+		
 
 	#tearDown method is called after each test
 	def tearDown(self):
