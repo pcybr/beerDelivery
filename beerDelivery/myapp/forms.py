@@ -4,6 +4,8 @@ from .models import Beer, Store, Order, Person, Trip
 class PersonForm(forms.Form):
 	name = forms.CharField(max_length = 90)
 	age = forms.IntegerField(min_value = 0)
+	username = forms.CharField(max_length = 16)
+	password = forms.CharField(max_length = 16)
 
 class BeerForm(forms.Form):
 	TOPS = (

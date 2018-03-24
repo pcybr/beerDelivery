@@ -7,10 +7,10 @@ models:
     ports:
       - "8001:8000"
     command: >
-        bash -c "python /app/beerDelivery/manage.py makemigrations 
+        bash -c "pip install requests
+        && python /app/beerDelivery/manage.py makemigrations 
         && python /app/beerDelivery/manage.py makemigrations myapp
         && python /app/beerDelivery/manage.py migrate
-        && python /app/beerDelivery/manage.py loaddata /app/beerDelivery/db.json
         && mod_wsgi-express start-server --working-directory /app/beerDelivery --reload-on-changes /app/beerDelivery/beerDelivery/wsgi.py"
 
 exp:
@@ -22,7 +22,8 @@ exp:
    volumes:
       - ./:/app
    command: >
-        bash -c "mod_wsgi-express start-server --working-directory /app/exp --reload-on-changes /app/exp/exp/wsgi.py"
+        bash -c "pip install requests
+        && mod_wsgi-express start-server --working-directory /app/exp --reload-on-changes /app/exp/exp/wsgi.py"
 
 web:
    image: tp33/django
@@ -33,4 +34,5 @@ web:
    volumes:
       - ./:/app
    command: >
-        bash -c "mod_wsgi-express start-server --working-directory /app/web --reload-on-changes /app/web/web/wsgi.py"
+        bash -c "pip install requests
+        && mod_wsgi-express start-server --working-directory /app/web --reload-on-changes /app/web/web/wsgi.py"

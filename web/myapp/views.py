@@ -6,6 +6,10 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 import urllib.request
 import json
+import requests
+from .forms import LoginForm
+from django.views.decorators.csrf import csrf_exempt
+
 
 def index(request):
 	# req = urllib.request.Request('http://exp-api:8000/index/')
@@ -166,8 +170,30 @@ def getAllOrders(request, pk = None):
 		full_list[name] = keys
 	return render(request, 'orders.html', context={'full_list':full_list})
 
+@csrf_exempt
+def login(request, pk = None):
+	if request.method == 'POST':
+		form = LoginForm(request.POST)
+		if form.is_valid():
+			try:
+				data = request.POST.copy()
+				username = data['username']
+				endpoint = "http://exp-api:8000/login/"
+				req = requests.post(endpoint,data=data)
+				status = req.status_code
+				message = (req.content).decode()
+				resp = json.loads(message)
+				if resp['status'] != 200:
+					form = LoginForm()
+					error = resp['error']
+					return render(request,'login.html',{'form':form,'error':error})
 
+				return render(request, 'index.html', context={'username':username})
 
+			except: 
+				error = 'Invalid User Credentials'
+				return render(request,'login.html',{'form':form,'error':error})
+	else:
+		form = LoginForm()
 
-
-
+	return render(request,'login.html',{'form':form})
