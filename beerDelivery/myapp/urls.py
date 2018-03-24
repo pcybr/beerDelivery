@@ -41,5 +41,6 @@ urlpatterns = [
 	url(r'^api/v1/order/(?P<pk>\d+)/update$', views.ApiUpdateOrder, name='order_update'),
 	url(r'^api/v1/order/all', views.ApiAllOrders, name='order_all'),
 
+	url(r'^api/v1/login$', views.login, name='login'),
 
 ]

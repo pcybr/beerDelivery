@@ -7,6 +7,10 @@ from django.http import JsonResponse
 import urllib.request
 import urllib.parse
 import json
+import requests
+
+from django.views.decorators.csrf import csrf_exempt
+
 
 def index(request,pk=None):
 	'''
@@ -111,3 +115,16 @@ def getAllTrips(request, pk = None):
 	new_list = data
 	return JsonResponse(new_list, safe = False)
 
+
+@csrf_exempt
+def login(request,pk = None):
+	if request.method == "POST":
+		try:
+			data = request.POST.copy()
+			endpoint = "http://models-api:8000/api/v1/login"
+			req = requests.post(endpoint,data=data)
+			message = str((req.content).decode())
+			ret = json.loads(message)
+			return JsonResponse(ret)
+		except:
+			return JsonResponse({'status':401, 'message': 'Invalid Endpoint'})

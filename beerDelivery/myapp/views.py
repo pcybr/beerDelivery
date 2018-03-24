@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from .models import Person, Beer, Store, Order, Trip
 from django.views.generic.edit import DeleteView
 from .forms import PersonForm, BeerForm, StoreForm, TripForm, OrderForm
+from django.views.decorators.csrf import csrf_exempt
+import requests
 
 def index(request):
 	return HttpResponse("Hello, world. You're at Myapps index.")
@@ -188,6 +190,8 @@ def ApiCreatePerson(request):
 	if form.is_valid():
 		person.name = form.cleaned_data['name']
 		person.age = form.cleaned_data['age']
+		person.username = form.cleaned_data['username']
+		person.password = form.cleaned_data['password']
 		person.save()
 		return redirect(person)
 	else:
@@ -546,9 +550,22 @@ def ApiAllStores(request):
 	return JsonResponse(resp, safe = False)
 
 
+@csrf_exempt
+def login(request,pk = None):
+	if request.method == 'POST':
+		try:
+			data = request.POST.copy()
+			username = data['username']
+			password = data['password']
 
+			user = Person.objects.get(username = username)
 
+			if user.password == password:
+				return JsonResponse({'status': 200, 'message': "Success"})
 
+			return JsonResponse({'status': 400, 'error': "Invalid User Credentials"})
 
-
-
+		except:
+			return JsonResponse({'status':404,'error':'User does not exist'})
+	else:
+		return JsonResponse({'message':"Not a POST method"})

@@ -1,6 +1,10 @@
 {% extends "base_generic.html" %}
 {% block content %}
 
+{% if username %}
+<h1> Welcome {{username}}! </h1>
+{% endif %}
+
 <h2>Welcome to Goombay Smash Beer Delivery!</h2>
 <h3>This is the worlds number one beer delivery service!</h3>
 <h4>Grabbing a case? See who else needs one! Or get notified when a friend is going out for a run.</h4>

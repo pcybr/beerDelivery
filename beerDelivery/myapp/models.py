@@ -7,6 +7,8 @@ class Person(models.Model):
 	person_id = models.AutoField(primary_key=True);
 	name = models.CharField(max_length = 90);
 	age = models.PositiveIntegerField();
+	username = models.CharField(max_length = 16, default="Username")
+	password = models.CharField(max_length = 16, default="Password")
 
 	def __str__(self):
 	    """
@@ -51,7 +53,7 @@ class Beer(models.Model):
 class Store(models.Model):
 	store_id = models.AutoField(primary_key=True)
 	#inventory = models.ManyToManyField(Beer);
-	inventory = models.CharField(max_length = 100)
+	inventory = models.CharField(max_length = 100,default = "None")
 	location = models.CharField(max_length = 100)
 	name = models.CharField(max_length = 100)
 
