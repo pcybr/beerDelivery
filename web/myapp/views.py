@@ -245,4 +245,13 @@ def signup(request, pk = None):
 		form = SignUpForm()
 		return render(request,'signup.html',{'form':form})
 
+@csrf_exempt
+def logout(request):
+	next = reverse('login')
+	response = HttpResponseRedirect(next)
+	response.delete_cookie('auth')
+	response.delete_cookie('name')
+	return response
+
+
 
