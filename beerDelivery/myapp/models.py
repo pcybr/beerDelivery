@@ -100,6 +100,8 @@ class Trip(models.Model):
 		return reverse('trip_get', args=[str(self.trip_id)])
 
 
-
-
-
+class Authenticator(models.Model):
+	user_id = models.PositiveIntegerField()
+	auth = models.CharField(primary_key=True,max_length=254)
+	date_created = models.DateTimeField(auto_now_add = True)
+	name = models.CharField(max_length=16,default="")
