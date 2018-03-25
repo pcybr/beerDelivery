@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
-from .models import Person, Beer, Store, Order, Trip
+from .models import Person, Beer, Store, Order, Trip, Authenticator
 from django.views.generic.edit import DeleteView
 from .forms import PersonForm, BeerForm, StoreForm, TripForm, OrderForm
 from django.views.decorators.csrf import csrf_exempt
 import requests
+from django.conf import settings
+import os
+import hmac
 
 def index(request):
 	return HttpResponse("Hello, world. You're at Myapps index.")
@@ -561,12 +564,24 @@ def login(request,pk = None):
 			user = Person.objects.get(username = username)
 
 			if user.password == password:
-				return JsonResponse({'status': 200, 'message': "Success"})
+				authenticator = Authenticator()
+				key = settings.SECRET_KEY
+				authenticator.auth = hmac.new(
+					key = settings.SECRET_KEY.encode('utf-8'),
+					msg = os.urandom(32),
+					digestmod = 'sha256',
+					).hexdigest()
+				
+				authenticator.user_id = user.person_id
+				authenticator.name = user.name
+				authenticator.save()
+
+				return JsonResponse({'status': 200, 'message': "Success",'auth':authenticator.auth,'name':authenticator.name})
 
 			return JsonResponse({'status': 400, 'error': "Invalid User Credentials"})
 
 		except:
-			return JsonResponse({'status':404,'error':'User does not exist'})
+			return JsonResponse({'status':404,'error':"User does not exist"})
 	else:
 		return JsonResponse({'message':"Not a POST method"})
 

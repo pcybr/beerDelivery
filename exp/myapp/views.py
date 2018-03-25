@@ -141,3 +141,4 @@ def signup(request, pk = None):
 			return JsonResponse(ret)
 		except:
 			return JsonResponse({'status':401, 'message': 'Invalid Endpoint'})
+
