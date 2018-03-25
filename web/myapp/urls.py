@@ -14,6 +14,8 @@ urlpatterns = [
 	url(r'^stores/', views.getAllStores, name = 'all_stores'),
 	url(r'^trips/', views.getAllTrips, name = 'all_trips'),
 	url(r'^orders/', views.getAllOrders, name = 'all_orders'),
+
 	url(r'^login/', views.login, name = 'login'),
+	url(r'^signup/', views.signup, name = 'signup'),
 
 ]

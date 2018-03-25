@@ -1,0 +1,37 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<form method="post" action="{% url 'signup' %}">
+{% csrf_token %}
+
+<div>
+  <td>{{ form.name.label_tag }}</td>
+  <td>{{ form.name }}</td>
+</div>
+<div>
+  <td>{{ form.age.label_tag }}</td>
+  <td>{{ form.age }}</td>
+</div>
+<div>
+  <td>{{ form.username.label_tag }}</td>
+  <td>{{ form.username }}</td>
+</div>
+<div>
+  <td>{{ form.password.label_tag }}</td>
+  <td>{{ form.password }}</td>
+</div>
+
+
+
+<div>
+  <input type="submit" value="Sign Up" />
+  <input type="hidden" name="next" value="{{ next }}" />
+</div>
+</form>
+
+{% if error %}
+<h1> {{error}} </h1>
+{% endif %}
+
+{% endblock %}
