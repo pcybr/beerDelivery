@@ -8,7 +8,7 @@ class Person(models.Model):
 	name = models.CharField(max_length = 90);
 	age = models.PositiveIntegerField();
 	username = models.CharField(max_length = 16, default="Username")
-	password = models.CharField(max_length = 16, default="Password")
+	password = models.CharField(max_length = 254, default="Password")
 
 	def __str__(self):
 	    """
