@@ -127,4 +127,4 @@ def login(request,pk = None):
 			ret = json.loads(message)
 			return JsonResponse(ret)
 		except:
-			return JsonResponse({'status':401, 'message': 'Invalid Endpoint'})
+			return JsonResponse({'status':401, 'message': req})

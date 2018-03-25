@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
+from django.urls import reverse
 import urllib.request
 import json
 import requests
@@ -12,11 +13,14 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request):
-	# req = urllib.request.Request('http://exp-api:8000/index/')
-	# response = urllib.request.urlopen(req).read().decode('utf-8')
-	# data = json.loads(response)
-	# string = "HERE--- " + req
-	return render(request, 'index.html', context={})
+	try:
+		auth = request.COOKIES.get('auth')
+		name = request.COOKIES.get('name')
+		# person = Person.object.get(pk=auth.user_id)
+		return render(request, 'index.html', context={'username': name})
+
+	except:
+		return render(request, 'index.html', context={})
 
 def getPerson(request,pk = None):
 	try: 
@@ -186,9 +190,17 @@ def login(request, pk = None):
 				if resp['status'] != 200:
 					form = LoginForm()
 					error = resp['error']
-					return render(request,'login.html',{'form':form,'error':error})
+					return render(request,'login.html',{'form':form,'error':resp})
 
-				return render(request, 'index.html', context={'username':username})
+				next = reverse('index')
+				if 'next' in form:
+					next = form.cleaned_data.get('next')
+
+				response = HttpResponseRedirect(next)
+				response.set_cookie("auth",resp['auth'])
+				response.set_cookie("name",resp['name'])
+
+				return response
 
 			except: 
 				error = 'Invalid User Credentials'
