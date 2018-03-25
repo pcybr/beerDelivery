@@ -228,7 +228,15 @@ def signup(request, pk = None):
 					error = resp['error']
 					return render(request,'signup.html',{'form':form,'error':error})
 
-				return render(request, 'signup.html', context={'username':username})
+				next = reverse('index')
+				if 'next' in form:
+					next = form.cleaned_data.get('next')
+
+				response = HttpResponseRedirect(next)
+				response.set_cookie("auth",resp['auth'])
+				response.set_cookie("name",resp['name'])
+
+				return response
 
 			except: 
 				error = 'User already exists. Please try another username.'

@@ -7,6 +7,7 @@ from .forms import PersonForm, BeerForm, StoreForm, TripForm, OrderForm
 from django.views.decorators.csrf import csrf_exempt
 import requests
 from django.conf import settings
+from django.contrib.auth.hashers import make_password, check_password
 import os
 import hmac
 
@@ -563,7 +564,7 @@ def login(request,pk = None):
 
 			user = Person.objects.get(username = username)
 
-			if user.password == password:
+			if check_password(password, user.password):
 				authenticator = Authenticator()
 				key = settings.SECRET_KEY
 				authenticator.auth = hmac.new(
@@ -578,10 +579,10 @@ def login(request,pk = None):
 
 				return JsonResponse({'status': 200, 'message': "Success",'auth':authenticator.auth,'name':authenticator.name})
 
-			return JsonResponse({'status': 400, 'error': "Invalid User Credentials"})
+			return JsonResponse({'status': 400, 'error': password})
 
 		except:
-			return JsonResponse({'status':404,'error':"User does not exist"})
+			return JsonResponse({'status':404,'error': user.password})
 	else:
 		return JsonResponse({'message':"Not a POST method"})
 
@@ -593,6 +594,7 @@ def signup(request,pk = None):
 			data = request.POST.copy()
 			username = data['username']
 			password = data['password']
+			password = make_password(password)
 			name = data['name']
 			age = data['age']
 
@@ -605,13 +607,24 @@ def signup(request,pk = None):
 				person.username = username
 				person.age = age
 				person.save()
+				authenticator = Authenticator()
+				key = settings.SECRET_KEY
+				authenticator.auth = hmac.new(
+					key = settings.SECRET_KEY.encode('utf-8'),
+					msg = os.urandom(32),
+					digestmod = 'sha256',
+					).hexdigest()
+				
+				authenticator.user_id = person.person_id
+				authenticator.name = person.name
+				authenticator.save()
 
-				return JsonResponse({'status': 200, 'message': "Success"})
+				return JsonResponse({'status': 200, 'message': "Success", 'auth':authenticator.auth,'name':authenticator.name})
 
 			return JsonResponse({'status': 400, 'error': "User already exists!"})
 
 		except:
-			return JsonResponse({'status':404,'error':'Invalid form request.'})
+			return JsonResponse({'status':404,'error': authenticator.auth})
 	else:
 		return JsonResponse({'message':"Not a POST method"})
 
