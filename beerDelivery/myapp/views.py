@@ -569,3 +569,47 @@ def login(request,pk = None):
 			return JsonResponse({'status':404,'error':'User does not exist'})
 	else:
 		return JsonResponse({'message':"Not a POST method"})
+
+
+@csrf_exempt
+def signup(request,pk = None):
+	if request.method == 'POST':
+		try:
+			data = request.POST.copy()
+			username = data['username']
+			password = data['password']
+			name = data['name']
+			age = data['age']
+
+			try:
+				user = Person.objects.get(username = username)
+			except Person.DoesNotExist:
+				person = Person()
+				person.name = name
+				person.password = password
+				person.username = username
+				person.age = age
+				person.save()
+
+				return JsonResponse({'status': 200, 'message': "Success"})
+
+			return JsonResponse({'status': 400, 'error': "User already exists!"})
+
+		except:
+			return JsonResponse({'status':404,'error':'Invalid form request.'})
+	else:
+		return JsonResponse({'message':"Not a POST method"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+

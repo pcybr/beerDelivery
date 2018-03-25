@@ -42,5 +42,6 @@ urlpatterns = [
 	url(r'^api/v1/order/all', views.ApiAllOrders, name='order_all'),
 
 	url(r'^api/v1/login$', views.login, name='login'),
+	url(r'^api/v1/signup$', views.signup, name = 'signup'),
 
 ]

@@ -7,7 +7,7 @@ from django.http import JsonResponse
 import urllib.request
 import json
 import requests
-from .forms import LoginForm
+from .forms import LoginForm, SignUpForm
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -179,7 +179,7 @@ def login(request, pk = None):
 				data = request.POST.copy()
 				username = data['username']
 				endpoint = "http://exp-api:8000/login/"
-				req = requests.post(endpoint,data=data)
+				req = requests.post(endpoint, data=data)
 				status = req.status_code
 				message = (req.content).decode()
 				resp = json.loads(message)
@@ -197,3 +197,32 @@ def login(request, pk = None):
 		form = LoginForm()
 
 	return render(request,'login.html',{'form':form})
+
+@csrf_exempt
+def signup(request, pk = None):
+	if request.method == 'POST':
+		form = SignUpForm(request.POST)
+		if form.is_valid():
+			try:
+				data = request.POST.copy()
+				username = data['username']
+				endpoint = "http://exp-api:8000/signup/"
+				req = requests.post(endpoint, data = data)
+				status = req.status_code
+				message = (req.content).decode()
+				resp = json.loads(message)
+				if resp['status'] != 200:
+					form = SignUpForm()
+					error = resp['error']
+					return render(request,'signup.html',{'form':form,'error':error})
+
+				return render(request, 'signup.html', context={'username':username})
+
+			except: 
+				error = 'User already exists. Please try another username.'
+				return render(request,'signup.html',{'form':form,'error':error})
+	else:
+		form = SignUpForm()
+		return render(request,'signup.html',{'form':form})
+
+
