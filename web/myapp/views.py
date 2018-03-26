@@ -47,34 +47,37 @@ def index(request):
 @login_required
 def getPerson(request,pk = None):
 	try: 
+		auth = request.COOKIES.get('auth')
 		endpoint = "http://exp-api:8000/person/" + str(pk)
 		req = urllib.request.Request(endpoint)
 		response = urllib.request.urlopen(req).read().decode('utf-8')
 		data = json.loads(response)
 		name = data['name']
 		age = data['age']
-		return render(request,'person_detail_view.html',context={'name':name,'age':age})
+		return render(request,'person_detail_view.html',context={'name':name,'age':age,'auth':auth})
 	except: 
 		obj = 'Person'
-		return render(request,'no_exist.html',context={'object':obj})
+		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 
 @login_required
 def getOrder(request,pk = None):
 	try:
+		auth = request.COOKIES.get('auth')
 		endpoint = "http://exp-api:8000/order/" + str(pk)
 		req = urllib.request.Request(endpoint)
 		response = urllib.request.urlopen(req).read().decode('utf-8')
 		data = json.loads(response)
 		buyer = data['buyer']
 		item = data['item']
-		return render(request,'order_detail_view.html',context={'buyer':buyer,'item':item})
+		return render(request,'order_detail_view.html',context={'buyer':buyer,'item':item,'auth':auth})
 	except: 
 		obj = 'Order'
-		return render(request,'no_exist.html',context={'object':obj})
+		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 
 @login_required
 def getTrip(request,pk = None):
 	try:
+		auth = request.COOKIES.get('auth')
 		endpoint = "http://exp-api:8000/trip/" + str(pk)
 		req = urllib.request.Request(endpoint)
 		response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -83,14 +86,15 @@ def getTrip(request,pk = None):
 		store = data['store']
 		time_created = data['time']
 		active = data['active']
-		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,})
+		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth})
 	except: 
 		obj = 'Trip'
-		return render(request,'no_exist.html',context={'object':obj})
+		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 
 @login_required
 def getBeer(request,pk = None):
 	try:
+		auth = request.COOKIES.get('auth')
 		endpoint = "http://exp-api:8000/beer/" + str(pk)
 		req = urllib.request.Request(endpoint)
 		response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -100,14 +104,15 @@ def getBeer(request,pk = None):
 		price = data['price']
 		beer_type = data['beer_type']
 		bottle_type = data['bottle_type']
-		return render(request,'beer_detail_view.html',context={'name':name,'age':size,'price':price,'bottle_type':bottle_type,'beer_type':beer_type})
+		return render(request,'beer_detail_view.html',context={'name':name,'age':size,'price':price,'bottle_type':bottle_type,'beer_type':beer_type,'auth':auth})
 	except: 
 		obj = 'Beer'
-		return render(request,'no_exist.html',context={'object':obj})
+		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 
 @login_required
 def getStore(request,pk = None):
 	try:
+		auth = request.COOKIES.get('auth')
 		endpoint = "http://exp-api:8000/store/" + str(pk)
 		req = urllib.request.Request(endpoint)
 		response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -115,13 +120,14 @@ def getStore(request,pk = None):
 		name = data['name']
 		location = data['location']
 		inventory = data['inventory']
-		return render(request,'store_detail_view.html',context={'name':name,'location':location,'inventory':inventory})
+		return render(request,'store_detail_view.html',context={'name':name,'location':location,'inventory':inventory,'auth':auth})
 	except: 
 		obj = 'Store'
-		return render(request,'no_exist.html',context={'object':obj})
+		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 
 @login_required
 def getAllPeople(request, pk = None):
+	auth = request.COOKIES.get('auth')
 	endpoint = "http://exp-api:8000/person/all"
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -135,10 +141,11 @@ def getAllPeople(request, pk = None):
 		data2 = json.loads(response2)
 		name = data2['name']
 		full_list[name] = keys
-	return render(request, 'people.html', context={'full_list':full_list})
+	return render(request, 'people.html', context={'full_list':full_list,'auth':auth})
 
 @login_required
 def getAllBeers(request, pk = None):
+	auth = request.COOKIES.get('auth')
 	endpoint = "http://exp-api:8000/beer/all"
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -152,7 +159,7 @@ def getAllBeers(request, pk = None):
 		data2 = json.loads(response2)
 		name = data2['name']
 		full_list[name] = keys
-	return render(request, 'beers.html', context={'full_list':full_list})
+	return render(request, 'beers.html', context={'full_list':full_list,'auth':auth})
 
 def getAllBeersList():
 	endpoint = "http://exp-api:8000/beer/all"
@@ -176,6 +183,7 @@ def getAllBeersList():
 
 @login_required
 def getAllStores(request, pk = None):
+	auth = request.COOKIES.get('auth')
 	endpoint = "http://exp-api:8000/store/all"
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -189,7 +197,7 @@ def getAllStores(request, pk = None):
 		data2 = json.loads(response2)
 		name = data2['name']
 		full_list[name] = keys
-	return render(request, 'stores.html', context={'full_list':full_list})
+	return render(request, 'stores.html', context={'full_list':full_list,'auth':auth})
 
 def getAllStoresList():
 	endpoint = "http://exp-api:8000/store/all"
@@ -213,6 +221,7 @@ def getAllStoresList():
 
 @login_required
 def getAllTrips(request, pk = None):
+	auth = request.COOKIES.get('auth')
 	endpoint = "http://exp-api:8000/trip/all"
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -226,10 +235,11 @@ def getAllTrips(request, pk = None):
 		data2 = json.loads(response2)
 		name = data2['runner']
 		full_list[keys] = name
-	return render(request, 'trips.html', context={'full_list':full_list})
+	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth})
 
 @login_required
 def getAllOrders(request, pk = None):
+	auth = request.COOKIES.get('auth')
 	endpoint = "http://exp-api:8000/order/all"
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -243,7 +253,7 @@ def getAllOrders(request, pk = None):
 		data2 = json.loads(response2)
 		name = data2['buyer']
 		full_list[name] = keys
-	return render(request, 'orders.html', context={'full_list':full_list})
+	return render(request, 'orders.html', context={'full_list':full_list,'auth':auth})
 
 @login_required
 def createTrip(request):
@@ -256,7 +266,7 @@ def createTrip(request):
 		response = HttpResponseRedirect(next)
 	if request.method == 'GET':
 		form = TripForm(allStores = CHOICES)
-		return render(request, 'tripForm.html', {'form': form})
+		return render(request, 'tripForm.html', {'form': form,'auth':auth})
 	form2 = TripCreate(store = request.POST['store'])
 	#if form2.is_valid():
 	try:
@@ -272,14 +282,14 @@ def createTrip(request):
 			if resp['status'] != 200:
 				form = TripForm(allStores = CHOICES)
 				error = resp['error']
-				return render(request,'tripForm.html',{'form':form,'error':resp['status']})
+				return render(request,'tripForm.html',{'form':form,'error':resp['status'],'auth':auth})
 
 			response = HttpResponseRedirect(next)
 			return response
 			# request.method = "GET"
 			# return getTrip(request, pk = data['pk'])
 	except:
-		return render(request, 'tripForm.html', context={'error': "No post"})
+		return render(request, 'tripForm.html', context={'error': "No post",'auth':auth})
 	#return render(request, 'tripForm.html', context={'error': 'Pete is dead!'})
 
 @login_required
@@ -292,7 +302,7 @@ def createOrder(request, pk = None):
 		response = HttpResponseRedirect(next)
 	if request.method == 'GET':
 		form = OrderForm(allBeers = CHOICES)
-		return render(request, 'orderForm.html', {'form':form})
+		return render(request, 'orderForm.html', {'form':form,'auth':auth})
 	form2 = OrderCreate(beer = request.POST['beer'])
 	try:
 		data = request.POST.copy()
@@ -308,7 +318,7 @@ def createOrder(request, pk = None):
 		if resp['status'] != 200:
 			form = OrderForm(allStores = CHOICES)
 			error = resp['error']
-			return render(request,'orderForm.html',{'form':form,'error':resp['status']})
+			return render(request,'orderForm.html',{'form':form,'error':resp['status'],'auth':auth})
 
 		response = HttpResponseRedirect(next)
 		return response
