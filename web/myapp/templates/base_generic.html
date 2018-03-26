@@ -29,9 +29,11 @@
         <li><a href = "/stores/" class="btn btn-default btn-lg active" role = "button">Stores</a></li>
         {% if not auth %}
         <li><a href = "/signup/" class="btn btn-default btn-lg active" role = "button">Sign Up</a></li>
-        <li><a href = "/login/" class="btn btn-default btn-lg active" role = "button">Login</a></li>
+        <li><a href = "/login/" class="btn btn-default btn-lg active" role = "button">Login</a></li>        
         {% endif %}
         {% if auth %}
+        <li><a href="/trip/create/" class="btn btn-default btn-lg active" role = "button">Create Trip</a></li>
+        <li><a href="/order/create/" class="btn btn-default btn-lg active" role = "button">Create Order</a></li>
         <li><a href = "/logout/" class="btn btn-default btn-lg active" role = "button">Logout</a></li>
         {% endif %}
       </ul>

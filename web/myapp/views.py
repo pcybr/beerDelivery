@@ -398,7 +398,7 @@ def signup(request, pk = None):
 
 				response = HttpResponseRedirect(next)
 				response.set_cookie("auth",resp['auth'])
-				response.set_cookie("name",resp['username'])
+				response.set_cookie("name",resp['name'])
 
 				return response
 
