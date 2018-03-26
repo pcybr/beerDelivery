@@ -279,7 +279,7 @@ def createTrip(request):
 			# request.method = "GET"
 			# return getTrip(request, pk = data['pk'])
 	except:
-		return render(request, 'tripForm.html', context={'error': "Pete is dead"})
+		return render(request, 'tripForm.html', context={'error': "No post"})
 	#return render(request, 'tripForm.html', context={'error': 'Pete is dead!'})
 
 @login_required
