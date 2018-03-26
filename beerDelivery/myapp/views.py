@@ -645,7 +645,7 @@ def createTrip(request, pk = None):
 			return JsonResponse({'error': trip.runner})
 
 	else:
-		return JsonResponse({'error': "fuckkkkkkkkkkkk this"})
+		return JsonResponse({'error': "Not POST"})
 
 
 def createOrder(request, pk = None):
@@ -663,7 +663,7 @@ def createOrder(request, pk = None):
 			return JsonResponse({'error': order.buyer})
 
 	else:
-		return JsonResponse({'error': "fuckkkkkkkkkkkk this"})
+		return JsonResponse({'error': "Not POST"})
 
 
 @csrf_exempt
