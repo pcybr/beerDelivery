@@ -249,6 +249,19 @@ def signup(request, pk = None):
 def logout(request):
 	next = reverse('login')
 	response = HttpResponseRedirect(next)
+	data = {}
+	auth_cookie = request.COOKIES.get('auth')
+	data['auth_cookie'] = auth_cookie
+	endpoint = "http://exp-api:8000/logout/"
+	req = requests.post(endpoint, data = data)
+	status = req.status_code
+	message = (req.content).decode()
+	resp = json.loads(message)
+	if resp['status'] != 200:
+		error = resp['error']
+		return render(request,'index.html',{'error':message})
+
+	response = HttpResponseRedirect(next)
 	response.delete_cookie('auth')
 	response.delete_cookie('name')
 	return response

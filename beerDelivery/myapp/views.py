@@ -629,6 +629,23 @@ def signup(request,pk = None):
 		return JsonResponse({'message':"Not a POST method"})
 
 
+@csrf_exempt
+def logout(request):
+	if request.method == 'POST':
+		try:
+			data = request.POST.copy()
+			auth = data['auth_cookie']
+			authenticator = Authenticator.objects.get(auth = auth)
+			authenticator.delete()
+			return JsonResponse({'status': 200, 'message': "Logged out."})
+
+		except:
+			return JsonResponse({'status': 400, 'error': "Didn't get the auth"})
+
+	else:
+		return JsonResponse({'status': 404, 'error': "Not a post."})
+
+
 
 
 
