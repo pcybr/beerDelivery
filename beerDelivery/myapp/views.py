@@ -629,6 +629,44 @@ def signup(request,pk = None):
 		return JsonResponse({'message':"Not a POST method"})
 
 
+def createTrip(request, pk = None):
+	if request.method == 'POST':
+		try:
+			data = request.POST.copy()
+			trip = Trip()
+			store = Store.objects.get(name=data['store'])
+			runner = Person.objects.get(name=data['name'])
+			trip.runner = runner
+			trip.store = store
+			trip.active = True
+			trip.save()
+			trip = Trip.objects.latest('time_created')
+			return JsonResponse({'status': 200, 'message': "Success", 'pk' : trip.trip_id })
+		except:
+			return JsonResponse({'error': trip.runner})
+
+	else:
+		return JsonResponse({'error': "fuckkkkkkkkkkkk this"})
+
+
+def createOrder(request, pk = None):
+	if request.method == 'POST':
+		try:
+			data = request.POST.copy()
+			order = Order()
+			beer = Beer.objects.get(name= data['beer'])
+			buyer = Person.objects.get(name= data['name'])
+			order.buyer = buyer
+			order.item = beer
+			order.save()
+			return JsonResponse({'status': 200, 'message': "Success"})
+		except:
+			return JsonResponse({'error': order.buyer})
+
+	else:
+		return JsonResponse({'error': "fuckkkkkkkkkkkk this"})
+
+
 
 
 

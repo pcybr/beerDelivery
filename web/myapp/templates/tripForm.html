@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<form method="post" action="{% url 'createTrip' %}">
+{% csrf_token %}
+
+<div>
+  <td>{{ form.store.label_tag }}</td>
+
+{% for value in form.store %}
+  <td>{{ value }}</td>
+</div>
+{% endfor %}
+<div>
+  <input type="submit" value="Make Trip" />
+  <input type="hidden" name="next" value="{{ next }}" />
+</div>
+</form>
+{% if error %}
+<h1> {{ error }} </h1>
+{% endif %}
+{% endblock %}

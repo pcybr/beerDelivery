@@ -88,7 +88,7 @@ class Trip(models.Model):
 	store = models.ForeignKey(Store);
 	time_created = models.DateTimeField(auto_now_add = True);
 	active = models.BooleanField();
-	orders = models.ManyToManyField(Order);
+	orders = models.ManyToManyField(Order, default = None);
 
 	def __str__(self):
 	    """
