@@ -17,7 +17,7 @@ def index(request):
 		auth = request.COOKIES.get('auth')
 		name = request.COOKIES.get('name')
 		# person = Person.object.get(pk=auth.user_id)
-		return render(request, 'index.html', context={'username': name})
+		return render(request, 'index.html', context={'username': name, 'auth': auth})
 
 	except:
 		return render(request, 'index.html', context={})
