@@ -579,10 +579,10 @@ def login(request,pk = None):
 
 				return JsonResponse({'status': 200, 'message': "Success",'auth':authenticator.auth,'name':authenticator.name})
 
-			return JsonResponse({'status': 400, 'error': password})
+			return JsonResponse({'status': 400, 'error': "Invalid password"})
 
 		except:
-			return JsonResponse({'status':404,'error': user.password})
+			return JsonResponse({'status':404,'error': "User does not exist."})
 	else:
 		return JsonResponse({'message':"Not a POST method"})
 
@@ -628,7 +628,6 @@ def signup(request,pk = None):
 	else:
 		return JsonResponse({'message':"Not a POST method"})
 
-
 def createTrip(request, pk = None):
 	if request.method == 'POST':
 		try:
@@ -665,6 +664,23 @@ def createOrder(request, pk = None):
 
 	else:
 		return JsonResponse({'error': "fuckkkkkkkkkkkk this"})
+
+
+@csrf_exempt
+def logout(request):
+	if request.method == 'POST':
+		try:
+			data = request.POST.copy()
+			auth = data['auth_cookie']
+			authenticator = Authenticator.objects.get(auth = auth)
+			authenticator.delete()
+			return JsonResponse({'status': 200, 'message': "Logged out."})
+
+		except:
+			return JsonResponse({'status': 400, 'error': "Didn't get the auth"})
+
+	else:
+		return JsonResponse({'status': 404, 'error': "Not a post."})
 
 
 

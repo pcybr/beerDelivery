@@ -45,5 +45,5 @@ urlpatterns = [
 	url(r'^api/v1/signup$', views.signup, name = 'signup'),
 	url(r'^api/v1/createTrip$', views.createTrip, name = 'createTrip'),
 	url(r'^api/v1/createOrder$', views.createOrder, name = 'createOrder'),
-
+	url(r'^api/v1/logout$', views.logout, name = 'logout'),
 ]

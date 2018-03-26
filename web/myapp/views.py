@@ -10,6 +10,7 @@ import json
 import requests
 from .forms import LoginForm, SignUpForm, TripForm, TripCreate, OrderForm, OrderCreate
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def index(request):
@@ -17,7 +18,7 @@ def index(request):
 		auth = request.COOKIES.get('auth')
 		name = request.COOKIES.get('name')
 		# person = Person.object.get(pk=auth.user_id)
-		return render(request, 'index.html', context={'username': name})
+		return render(request, 'index.html', context={'username': name, 'auth': auth})
 
 	except:
 		return render(request, 'index.html', context={})
@@ -291,6 +292,18 @@ def createOrder(request, pk = None):
 
 @csrf_exempt
 def login(request, pk = None):
+	# try:
+	# 	auth = request.COOKIES.get('auth')
+	# 	name = request.COOKIES.get('name')
+	# 	if auth:
+	# 		next = reverse('index')
+	# 		response = HttpResponseRedirect(next)
+
+	# 	return response
+
+	# except auth.DoesNotExist:
+	# 	return None
+
 	if request.method == 'POST':
 		form = LoginForm(request.POST)
 		if form.is_valid():
@@ -363,6 +376,19 @@ def signup(request, pk = None):
 @csrf_exempt
 def logout(request):
 	next = reverse('login')
+	response = HttpResponseRedirect(next)
+	data = {}
+	auth_cookie = request.COOKIES.get('auth')
+	data['auth_cookie'] = auth_cookie
+	endpoint = "http://exp-api:8000/logout/"
+	req = requests.post(endpoint, data = data)
+	status = req.status_code
+	message = (req.content).decode()
+	resp = json.loads(message)
+	if resp['status'] != 200:
+		error = resp['error']
+		return render(request,'index.html',{'error':message})
+
 	response = HttpResponseRedirect(next)
 	response.delete_cookie('auth')
 	response.delete_cookie('name')

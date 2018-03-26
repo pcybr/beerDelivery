@@ -12,7 +12,7 @@ class TestPerson(TestCase):
 		# os.system('python /app/beerDelivery/beerDelivery/manage.py loaddata db.json')
 		# call_command("loaddata", "/app/beerDelivery/beerDelivery/db.json")
 
-		Person.objects.create(name='Peter',age=20,person_id=200)
+		Person.objects.create(name='Peter',age=20,person_id=200,username='Nic',password='yes')
 		
 		pass #nothing to set up 
 

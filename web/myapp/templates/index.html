@@ -1,6 +1,13 @@
 {% extends "base_generic.html" %}
 {% block content %}
 
+
+{% if error %}
+	<h1><strong> {{ error }} </strong></h1>
+	<br>
+{% endif %}
+
+
 {% if username %}
 <h1> Welcome {{username}}! </h1>
 {% endif %}
@@ -14,5 +21,7 @@
 <p>To view active trips that you can place an order with, click on trips!</p>
 <p>To view all placed orders, look at orders.</p>
 <p>Checkout all the beers you can order under the beers tab!</p>
+
+
 
 {% endblock %}

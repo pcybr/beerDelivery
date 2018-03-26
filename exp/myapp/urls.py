@@ -19,5 +19,5 @@ urlpatterns = [
 	url(r'^signup/', views.signup, name = 'signup'),
 	url(r'^createTrip/', views.createTrip, name = 'createTrip'),
 	url(r'^createOrder/', views.createOrder, name = 'createOrder'),
-
+	url(r'^logout/', views.logout, name = 'logout'),
 ]

@@ -85,7 +85,7 @@ class Order(models.Model):
 class Trip(models.Model):
 	trip_id = models.AutoField(primary_key=True);
 	runner = models.ForeignKey(Person, related_name = 'runner_person');
-	store = models.ForeignKey(Store);
+	store = models.ForeignKey(Store, default=1);
 	time_created = models.DateTimeField(auto_now_add = True);
 	active = models.BooleanField();
 	orders = models.ManyToManyField(Order, default = None);

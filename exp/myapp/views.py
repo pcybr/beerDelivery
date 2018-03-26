@@ -174,3 +174,17 @@ def signup(request, pk = None):
 		except:
 			return JsonResponse({'status':401, 'message': 'Invalid Endpoint'})
 
+
+@csrf_exempt
+def logout(request):
+	if request.method == "POST":
+		try:
+			data = request.POST.copy()
+			endpoint = "http://models-api:8000/api/v1/logout"
+			req = requests.post(endpoint,data=data)
+			message = str((req.content).decode())
+			ret = json.loads(message)
+			return JsonResponse(ret)
+		except:
+			return JsonResponse({'status':401, 'error': 'Invalid Endpoint'})
+
