@@ -44,4 +44,5 @@ urlpatterns = [
 	url(r'^api/v1/login$', views.login, name='login'),
 	url(r'^api/v1/signup$', views.signup, name = 'signup'),
 	url(r'^api/v1/logout$', views.logout, name = 'logout'),
+	url(r'^api/v1/checkAuth$', views.checkAuth, name = 'check_auth'),
 ]
