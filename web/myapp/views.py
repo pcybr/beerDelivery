@@ -64,6 +64,42 @@ def getTrip(request,pk = None):
 		obj = 'Trip'
 		return render(request,'no_exist.html',context={'object':obj})
 
+
+# data = request.POST.copy()
+# 				username = data['username']
+# 				endpoint = "http://exp-api:8000/login/"
+# 				req = requests.post(endpoint, data=data)
+# 				status = req.status_code
+# 				message = (req.content).decode()
+# 				resp = json.loads(message)
+# 				if resp['status'] != 200:
+# 					form = LoginForm()
+# 					error = resp['error']
+# 					return render(request,'login.html',{'form':form,'error':resp})
+
+def login_required(fun):
+	def wrap(request,*args,**kwargs):
+		try: 
+			auth = request.COOKIES.get('auth')
+			name = request.COOKIES.get('name')
+			data = {'auth':auth, 'name':name}
+			endpoint = "http://exp-api:8000/checkAuth/"
+			req = requests.post(endpoint, data = data)
+			message = (req.content).decode()
+			data2 = json.loads(message)
+			# name = data['name']
+			# age = data['age']
+			# username = data['username']
+			if 'status' in data2 and data2['status'] == 200:
+			    return fun(request,*args,**kwargs)
+			else:
+				return HttpResponse("/login/")
+
+		except: 
+			return HttpResponse("/login/")
+	return wrap
+
+@login_required
 def getBeer(request,pk = None):
 	try:
 		endpoint = "http://exp-api:8000/beer/" + str(pk)
@@ -326,7 +362,7 @@ def login(request, pk = None):
 
 				response = HttpResponseRedirect(next)
 				response.set_cookie("auth",resp['auth'])
-				response.set_cookie("name",resp['name'])
+				response.set_cookie("name",resp['username'])
 
 				return response
 
@@ -362,7 +398,7 @@ def signup(request, pk = None):
 
 				response = HttpResponseRedirect(next)
 				response.set_cookie("auth",resp['auth'])
-				response.set_cookie("name",resp['name'])
+				response.set_cookie("name",resp['username'])
 
 				return response
 

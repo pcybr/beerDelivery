@@ -577,7 +577,7 @@ def login(request,pk = None):
 				authenticator.name = user.name
 				authenticator.save()
 
-				return JsonResponse({'status': 200, 'message': "Success",'auth':authenticator.auth,'name':authenticator.name})
+				return JsonResponse({'status': 200, 'message': "Success",'auth':authenticator.auth,'name':authenticator.name,'username':username})
 
 			return JsonResponse({'status': 400, 'error': "Invalid password"})
 
@@ -682,16 +682,23 @@ def logout(request):
 	else:
 		return JsonResponse({'status': 404, 'error': "Not a post."})
 
+@csrf_exempt
+def checkAuth(request):
+	try:
+		data = request.POST.copy()
+		auth = data['auth']
+		name = data['name']
 
+		person = Person.objects.get(name=name)
+		authenticator = Authenticator.objects.get(auth=auth)
 
+		if person.person_id == authenticator.user_id:
+			return JsonResponse({'status':200})
+		else:
+			return JsonResponse({'status': 404, 'error': "Not Valid"})
 
-
-
-
-
-
-
-
+	except:
+		return JsonResponse({'status': 400, 'error': "Didn't get the auth"})
 
 
 

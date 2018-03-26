@@ -20,4 +20,6 @@ urlpatterns = [
 	url(r'^createTrip/', views.createTrip, name = 'createTrip'),
 	url(r'^createOrder/', views.createOrder, name = 'createOrder'),
 	url(r'^logout/', views.logout, name = 'logout'),
+	url(r'^checkAuth/', views.checkAuth, name = 'check_auth'),
+
 ]

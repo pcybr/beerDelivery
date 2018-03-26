@@ -188,3 +188,14 @@ def logout(request):
 		except:
 			return JsonResponse({'status':401, 'error': 'Invalid Endpoint'})
 
+@csrf_exempt
+def checkAuth(request):
+	try:
+		data = request.POST.copy()
+		endpoint = "http://models-api:8000/api/v1/checkAuth"
+		req = requests.post(endpoint, data = data)
+		message = str((req.content).decode())
+		data = json.loads(message)
+		return JsonResponse(data)
+	except:
+		return JsonResponse({'status':401, 'error': 'Invalid Endpoint'})
