@@ -17,6 +17,8 @@ urlpatterns = [
 
 	url(r'^login/', views.login, name = 'login'),
 	url(r'^signup/', views.signup, name = 'signup'),
+	url(r'^createTrip/', views.createTrip, name = 'createTrip'),
+	url(r'^createOrder/', views.createOrder, name = 'createOrder'),
 	url(r'^logout/', views.logout, name = 'logout'),
 	url(r'^checkAuth/', views.checkAuth, name = 'check_auth'),
 

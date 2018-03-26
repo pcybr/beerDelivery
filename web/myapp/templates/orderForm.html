@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<form method="post" action="{% url 'createOrder' %}">
+{% csrf_token %}
+
+<div>
+  <td>{{ form.store.label_tag }}</td>
+
+{% for value in form.beer %}
+  <td>{{ value }}</td>
+</div>
+{% endfor %}
+<div>
+  <input type="submit" value="Make Order" />
+  <input type="hidden" name="next" value="{{ next }}" />
+</div>
+</form>
+{% if error %}
+<h1> {{ error }} </h1>
+{% endif %}
+{% endblock %}
