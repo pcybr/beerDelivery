@@ -19,5 +19,8 @@ urlpatterns = [
 	url(r'^signup/', views.signup, name = 'signup'),
 	url(r'^logout/', views.logout, name = 'logout'),
 
+	url(r'^trip/create/', views.createTrip, name = 'createTrip'),
+	url(r'^order/create/', views.createOrder, name = 'createOrder'),
+
 
 ]

@@ -27,8 +27,8 @@ class BeerForm(forms.Form):
 	bottle_type = forms.ChoiceField(choices = TOPS, widget = forms.Select())
 
 class StoreForm(forms.Form):
-	inventory = forms.ModelMultipleChoiceField(queryset = Beer.objects.all())
-	#inventory = forms.CharField(max_length = 100)
+	# inventory = forms.ModelMultipleChoiceField(queryset = Beer.objects.all())
+	inventory = forms.CharField(max_length = 100)
 	location = forms.CharField(max_length = 100)
 	name = forms.CharField(max_length = 100);
 

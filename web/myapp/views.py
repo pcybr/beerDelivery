@@ -8,7 +8,7 @@ from django.urls import reverse
 import urllib.request
 import json
 import requests
-from .forms import LoginForm, SignUpForm
+from .forms import LoginForm, SignUpForm, TripForm, TripCreate, OrderForm, OrderCreate
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -127,6 +127,27 @@ def getAllBeers(request, pk = None):
 		full_list[name] = keys
 	return render(request, 'beers.html', context={'full_list':full_list})
 
+def getAllBeersList():
+	endpoint = "http://exp-api:8000/beer/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = []
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/beer/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		name = data2['name']
+		full_list.append(name)
+	choices = ()
+	for values in full_list:
+		tup = (str(values), str(values))
+		choices = choices + (tup,)
+	return choices
+
+
 def getAllStores(request, pk = None):
 	endpoint = "http://exp-api:8000/store/all"
 	req = urllib.request.Request(endpoint)
@@ -143,6 +164,27 @@ def getAllStores(request, pk = None):
 		full_list[name] = keys
 	return render(request, 'stores.html', context={'full_list':full_list})
 
+def getAllStoresList():
+	endpoint = "http://exp-api:8000/store/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = []
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/store/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		name = data2['name']
+		full_list.append(name)
+	choices = ()
+	for values in full_list:
+		tup = (str(values), str(values))
+		choices = choices + (tup,)
+	return choices
+
+
 def getAllTrips(request, pk = None):
 	endpoint = "http://exp-api:8000/trip/all"
 	req = urllib.request.Request(endpoint)
@@ -156,7 +198,7 @@ def getAllTrips(request, pk = None):
 		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
 		data2 = json.loads(response2)
 		name = data2['runner']
-		full_list[name] = keys
+		full_list[keys] = name
 	return render(request, 'trips.html', context={'full_list':full_list})
 
 def getAllOrders(request, pk = None):
@@ -174,6 +216,79 @@ def getAllOrders(request, pk = None):
 		name = data2['order']
 		full_list[name] = keys
 	return render(request, 'orders.html', context={'full_list':full_list})
+
+def createTrip(request):
+	name = request.COOKIES.get('name')
+	auth = request.COOKIES.get('auth')
+	next = reverse('index')
+	# CHOICES = (("Food Lion","Food Lion"), ("Kroger", "Kroger"))
+	CHOICES = getAllStoresList()
+	if not auth:
+		response = HttpResponseRedirect(next)
+	if request.method == 'GET':
+		form = TripForm(allStores = CHOICES)
+		return render(request, 'tripForm.html', {'form': form})
+	form2 = TripCreate(store = request.POST['store'])
+	#if form2.is_valid():
+	try:
+			data = request.POST.copy()
+			data['name'] = name
+			store = data['store']
+			# name = name
+			endpoint = "http://exp-api:8000/createTrip/"
+			req = requests.post(endpoint, data = data)
+			status = req.status_code
+			message = (req.content).decode()
+			resp = json.loads(message)
+			if resp['status'] != 200:
+				form = TripForm(allStores = CHOICES)
+				error = resp['error']
+				return render(request,'tripForm.html',{'form':form,'error':resp['status']})
+
+			response = HttpResponseRedirect(next)
+			return response
+			# request.method = "GET"
+			# return getTrip(request, pk = data['pk'])
+	except:
+		return render(request, 'tripForm.html', context={'error': "Pete is dead"})
+	#return render(request, 'tripForm.html', context={'error': 'Pete is dead!'})
+
+
+def createOrder(request, pk = None):
+	name = request.COOKIES.get('name')
+	auth = request.COOKIES.get('auth')
+	next = reverse('index')
+	CHOICES = getAllBeersList()
+	if not auth:
+		response = HttpResponseRedirect(next)
+	if request.method == 'GET':
+		form = OrderForm(allBeers = CHOICES)
+		return render(request, 'orderForm.html', {'form':form})
+	form2 = OrderCreate(beer = request.POST['beer'])
+	try:
+		data = request.POST.copy()
+		data['name'] = name
+		beer = data['beer']
+		endpoint = "http://exp-api:8000/createOrder/"
+		req = requests.post(endpoint, data = data)
+		status = req.status_code
+		message = (req.content).decode()
+		resp = json.loads(message)
+
+
+		if resp['status'] != 200:
+			form = OrderForm(allStores = CHOICES)
+			error = resp['error']
+			return render(request,'orderForm.html',{'form':form,'error':resp['status']})
+
+		response = HttpResponseRedirect(next)
+		return response
+		# request.method = "GET"
+		# return getTrip(request, pk = data['pk'])
+	except:
+		return render(request, 'orderForm.html', context={'error': message})
+
+
 
 @csrf_exempt
 def login(request, pk = None):
