@@ -10,6 +10,7 @@ import json
 import requests
 from .forms import LoginForm, SignUpForm
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def index(request):
@@ -176,6 +177,18 @@ def getAllOrders(request, pk = None):
 
 @csrf_exempt
 def login(request, pk = None):
+	# try:
+	# 	auth = request.COOKIES.get('auth')
+	# 	name = request.COOKIES.get('name')
+	# 	if auth:
+	# 		next = reverse('index')
+	# 		response = HttpResponseRedirect(next)
+
+	# 	return response
+
+	# except auth.DoesNotExist:
+	# 	return None
+
 	if request.method == 'POST':
 		form = LoginForm(request.POST)
 		if form.is_valid():

@@ -579,10 +579,10 @@ def login(request,pk = None):
 
 				return JsonResponse({'status': 200, 'message': "Success",'auth':authenticator.auth,'name':authenticator.name})
 
-			return JsonResponse({'status': 400, 'error': password})
+			return JsonResponse({'status': 400, 'error': "Invalid password"})
 
 		except:
-			return JsonResponse({'status':404,'error': user.password})
+			return JsonResponse({'status':404,'error': "User does not exist."})
 	else:
 		return JsonResponse({'message':"Not a POST method"})
 

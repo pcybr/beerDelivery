@@ -5,6 +5,11 @@
 <form method="post" action="{% url 'login' %}">
 {% csrf_token %}
 
+
+{% if error %}
+<h1> <strong> {{error}} </strong> </h1>
+{% endif %}
+
 <div>
   <td>{{ form.username.label_tag }}</td>
   <td>{{ form.username }}</td>
@@ -19,9 +24,5 @@
   <input type="hidden" name="next" value="{{ next }}" />
 </div>
 </form>
-
-{% if error %}
-<h1> {{error}} </h1>
-{% endif %}
 
 {% endblock %}
