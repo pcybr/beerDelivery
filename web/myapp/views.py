@@ -241,7 +241,7 @@ def getAllOrders(request, pk = None):
 		req2 = urllib.request.Request(endpoint2)
 		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
 		data2 = json.loads(response2)
-		name = data2['order']
+		name = data2['buyer']
 		full_list[name] = keys
 	return render(request, 'orders.html', context={'full_list':full_list})
 
