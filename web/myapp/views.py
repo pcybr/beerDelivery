@@ -12,71 +12,6 @@ from .forms import LoginForm, SignUpForm, TripForm, TripCreate, OrderForm, Order
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 
-
-def index(request):
-	try:
-		auth = request.COOKIES.get('auth')
-		name = request.COOKIES.get('name')
-		# person = Person.object.get(pk=auth.user_id)
-		return render(request, 'index.html', context={'username': name, 'auth': auth})
-
-	except:
-		return render(request, 'index.html', context={})
-
-def getPerson(request,pk = None):
-	try: 
-		endpoint = "http://exp-api:8000/person/" + str(pk)
-		req = urllib.request.Request(endpoint)
-		response = urllib.request.urlopen(req).read().decode('utf-8')
-		data = json.loads(response)
-		name = data['name']
-		age = data['age']
-		return render(request,'person_detail_view.html',context={'name':name,'age':age})
-	except: 
-		obj = 'Person'
-		return render(request,'no_exist.html',context={'object':obj})
-
-def getOrder(request,pk = None):
-	try:
-		endpoint = "http://exp-api:8000/order/" + str(pk)
-		req = urllib.request.Request(endpoint)
-		response = urllib.request.urlopen(req).read().decode('utf-8')
-		data = json.loads(response)
-		buyer = data['buyer']
-		item = data['item']
-		return render(request,'order_detail_view.html',context={'buyer':buyer,'item':item})
-	except: 
-		obj = 'Order'
-		return render(request,'no_exist.html',context={'object':obj})
-
-def getTrip(request,pk = None):
-	try:
-		endpoint = "http://exp-api:8000/trip/" + str(pk)
-		req = urllib.request.Request(endpoint)
-		response = urllib.request.urlopen(req).read().decode('utf-8')
-		data = json.loads(response)
-		runner = data['runner']
-		store = data['store']
-		time_created = data['time']
-		active = data['active']
-		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,})
-	except: 
-		obj = 'Trip'
-		return render(request,'no_exist.html',context={'object':obj})
-
-
-# data = request.POST.copy()
-# 				username = data['username']
-# 				endpoint = "http://exp-api:8000/login/"
-# 				req = requests.post(endpoint, data=data)
-# 				status = req.status_code
-# 				message = (req.content).decode()
-# 				resp = json.loads(message)
-# 				if resp['status'] != 200:
-# 					form = LoginForm()
-# 					error = resp['error']
-# 					return render(request,'login.html',{'form':form,'error':resp})
-
 def login_required(fun):
 	def wrap(request,*args,**kwargs):
 		try: 
@@ -93,11 +28,65 @@ def login_required(fun):
 			if 'status' in data2 and data2['status'] == 200:
 			    return fun(request,*args,**kwargs)
 			else:
-				return HttpResponse("/login/")
+				return HttpResponseRedirect("/login/")
 
 		except: 
-			return HttpResponse("/login/")
+			return HttpResponseRedirect("/login/")
 	return wrap
+
+def index(request):
+	try:
+		auth = request.COOKIES.get('auth')
+		name = request.COOKIES.get('name')
+		# person = Person.object.get(pk=auth.user_id)
+		return render(request, 'index.html', context={'username': name, 'auth': auth})
+
+	except:
+		return render(request, 'index.html', context={})
+
+@login_required
+def getPerson(request,pk = None):
+	try: 
+		endpoint = "http://exp-api:8000/person/" + str(pk)
+		req = urllib.request.Request(endpoint)
+		response = urllib.request.urlopen(req).read().decode('utf-8')
+		data = json.loads(response)
+		name = data['name']
+		age = data['age']
+		return render(request,'person_detail_view.html',context={'name':name,'age':age})
+	except: 
+		obj = 'Person'
+		return render(request,'no_exist.html',context={'object':obj})
+
+@login_required
+def getOrder(request,pk = None):
+	try:
+		endpoint = "http://exp-api:8000/order/" + str(pk)
+		req = urllib.request.Request(endpoint)
+		response = urllib.request.urlopen(req).read().decode('utf-8')
+		data = json.loads(response)
+		buyer = data['buyer']
+		item = data['item']
+		return render(request,'order_detail_view.html',context={'buyer':buyer,'item':item})
+	except: 
+		obj = 'Order'
+		return render(request,'no_exist.html',context={'object':obj})
+
+@login_required
+def getTrip(request,pk = None):
+	try:
+		endpoint = "http://exp-api:8000/trip/" + str(pk)
+		req = urllib.request.Request(endpoint)
+		response = urllib.request.urlopen(req).read().decode('utf-8')
+		data = json.loads(response)
+		runner = data['runner']
+		store = data['store']
+		time_created = data['time']
+		active = data['active']
+		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,})
+	except: 
+		obj = 'Trip'
+		return render(request,'no_exist.html',context={'object':obj})
 
 @login_required
 def getBeer(request,pk = None):
@@ -116,6 +105,7 @@ def getBeer(request,pk = None):
 		obj = 'Beer'
 		return render(request,'no_exist.html',context={'object':obj})
 
+@login_required
 def getStore(request,pk = None):
 	try:
 		endpoint = "http://exp-api:8000/store/" + str(pk)
@@ -130,7 +120,7 @@ def getStore(request,pk = None):
 		obj = 'Store'
 		return render(request,'no_exist.html',context={'object':obj})
 
-
+@login_required
 def getAllPeople(request, pk = None):
 	endpoint = "http://exp-api:8000/person/all"
 	req = urllib.request.Request(endpoint)
@@ -147,6 +137,7 @@ def getAllPeople(request, pk = None):
 		full_list[name] = keys
 	return render(request, 'people.html', context={'full_list':full_list})
 
+@login_required
 def getAllBeers(request, pk = None):
 	endpoint = "http://exp-api:8000/beer/all"
 	req = urllib.request.Request(endpoint)
@@ -183,7 +174,7 @@ def getAllBeersList():
 		choices = choices + (tup,)
 	return choices
 
-
+@login_required
 def getAllStores(request, pk = None):
 	endpoint = "http://exp-api:8000/store/all"
 	req = urllib.request.Request(endpoint)
@@ -220,7 +211,7 @@ def getAllStoresList():
 		choices = choices + (tup,)
 	return choices
 
-
+@login_required
 def getAllTrips(request, pk = None):
 	endpoint = "http://exp-api:8000/trip/all"
 	req = urllib.request.Request(endpoint)
@@ -237,6 +228,7 @@ def getAllTrips(request, pk = None):
 		full_list[keys] = name
 	return render(request, 'trips.html', context={'full_list':full_list})
 
+@login_required
 def getAllOrders(request, pk = None):
 	endpoint = "http://exp-api:8000/order/all"
 	req = urllib.request.Request(endpoint)
@@ -253,6 +245,7 @@ def getAllOrders(request, pk = None):
 		full_list[name] = keys
 	return render(request, 'orders.html', context={'full_list':full_list})
 
+@login_required
 def createTrip(request):
 	name = request.COOKIES.get('name')
 	auth = request.COOKIES.get('auth')
@@ -289,7 +282,7 @@ def createTrip(request):
 		return render(request, 'tripForm.html', context={'error': "Pete is dead"})
 	#return render(request, 'tripForm.html', context={'error': 'Pete is dead!'})
 
-
+@login_required
 def createOrder(request, pk = None):
 	name = request.COOKIES.get('name')
 	auth = request.COOKIES.get('auth')
@@ -362,7 +355,7 @@ def login(request, pk = None):
 
 				response = HttpResponseRedirect(next)
 				response.set_cookie("auth",resp['auth'])
-				response.set_cookie("name",resp['username'])
+				response.set_cookie("name",resp['name'])
 
 				return response
 
@@ -410,6 +403,7 @@ def signup(request, pk = None):
 		return render(request,'signup.html',{'form':form})
 
 @csrf_exempt
+@login_required
 def logout(request):
 	next = reverse('login')
 	response = HttpResponseRedirect(next)
