@@ -9,7 +9,7 @@
 
 
 {% if username %}
-<h1> Welcome {{username}}! </h1>
+<h1> Hello {{username}}! </h1>
 {% endif %}
 
 <h2>Welcome to Goombay Smash Beer Delivery!</h2>
@@ -21,6 +21,17 @@
 <p>To view active trips that you can place an order with, click on trips!</p>
 <p>To view all placed orders, look at orders.</p>
 <p>Checkout all the beers you can order under the beers tab!</p>
+<br>
+{% if auth %}
+{{ auth_time }}
+
+<p><strong>To create a trip, go to the Create Trip tab!</strong></p>
+<p><strong>To place an order, go to the Create Order tab!</strong></p>
+{% endif %}
+
+{% if not auth %}
+<p><strong>Signup or Login to create trips and place orders!</strong></p>
+{% endif %}
 
 
 

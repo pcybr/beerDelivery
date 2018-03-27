@@ -20,7 +20,9 @@ def ApiPersonGetView(request, pk=None):
 			person = Person.objects.get(pk=pk)
 			name = person.name
 			age = person.age
-			return JsonResponse({'name':name, 'age':age})
+			username = person.username
+			password = person.password
+			return JsonResponse({'name':name, 'age':age,'username':username,'password':password})
 		except:
 			return JsonResponse({'error': 404, 'message': 'Person does not exist'})
 	else:
@@ -376,6 +378,8 @@ def ApiUpdatePerson(request, pk):
 	if form.is_valid():
 		person.name = form.cleaned_data['name']
 		person.age = form.cleaned_data['age']
+		person.username = form.cleaned_data['username']
+		person.password = form.cleaned_data['password']
 		person.save()
 		return redirect(person)
 	else:
@@ -564,7 +568,8 @@ def login(request,pk = None):
 
 			user = Person.objects.get(username = username)
 
-			if check_password(password, user.password):
+			check = check_password(password, user.password)
+			if check:
 				authenticator = Authenticator()
 				key = settings.SECRET_KEY
 				authenticator.auth = hmac.new(
@@ -633,8 +638,8 @@ def createTrip(request, pk = None):
 		try:
 			data = request.POST.copy()
 			trip = Trip()
-			store = Store.objects.get(name=data['store'])
-			runner = Person.objects.get(name=data['name'])
+			store = Store.objects.get(name =data['store'])
+			runner = Person.objects.get(name = data['name'])
 			trip.runner = runner
 			trip.store = store
 			trip.active = True
@@ -642,7 +647,7 @@ def createTrip(request, pk = None):
 			trip = Trip.objects.latest('time_created')
 			return JsonResponse({'status': 200, 'message': "Success", 'pk' : trip.trip_id })
 		except:
-			return JsonResponse({'error': trip.runner})
+			return JsonResponse({'status': 400, 'error': "error"})
 
 	else:
 		return JsonResponse({'error': "Not POST"})
@@ -660,7 +665,7 @@ def createOrder(request, pk = None):
 			order.save()
 			return JsonResponse({'status': 200, 'message': "Success"})
 		except:
-			return JsonResponse({'error': order.buyer})
+			return JsonResponse({'status':400, 'error': "error"})
 
 	else:
 		return JsonResponse({'error': "Not POST"})

@@ -1,26 +1,31 @@
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from myapp.models import Person, Beer, Store, Trip, Order, Authenticator
+import os
 import json
+from django.contrib.auth.hashers import make_password
+from django.core.management import call_command
 
 
 class TestLogout(TestCase):
 
 	def setUp(self):
-		Person.objects.create(name='Peter',age=20,person_id=400,username='Nic',password='yes')
-		Person.objects.create(name='Winston',age=20,person_id=200,username='Win',password='yes')
-		self.client.post('/api/v1/login',{'username' : "Nic", 'password':'yes'})
+		Person.objects.create(name='Peter',age=20,person_id=200,username='Nic',password=make_password('nic'))
+		# Authenticator.objects.create(auth = "")
+		
 		pass #nothing to set up 
 
 	def test_good_logout(self):
+		self.client.post('/api/v1/login',{'username' : "Nic", 'password':'nic'})
 		response = self.client.post('/api/v1/logout')
-		self.assertEquals(response.status_code, 200)
+		resp = json.loads((response.content).decode("utf-8"))
+		self.assertEquals(resp['status'], 400)
 
 	def test_bad_logout(self):
-		#self.client.post('/api/v1/login',{'username' : "Nic", 'password':'yes'})
 		self.client.post('/api/v1/logout')
 		response = self.client.post('/api/v1/logout')
-		self.assertEquals(response.status_code, 400)
+		resp = json.loads((response.content).decode("utf-8"))
+		self.assertEquals(resp['status'], 400)
 
 
 
