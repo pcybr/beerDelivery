@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<h1>Where are you going on a beer run?</h1>
+<br>
 <form method="post" action="{% url 'createTrip' %}">
 {% csrf_token %}
 

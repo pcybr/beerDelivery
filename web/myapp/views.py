@@ -11,6 +11,8 @@ import requests
 from .forms import LoginForm, SignUpForm, TripForm, TripCreate, OrderForm, OrderCreate
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
+import datetime
+from django.utils.timezone import utc
 
 def login_required(fun):
 	def wrap(request,*args,**kwargs):
@@ -19,7 +21,10 @@ def login_required(fun):
 			name = request.COOKIES.get('name')
 			data = {'auth':auth, 'name':name}
 			endpoint = "http://exp-api:8000/checkAuth/"
+
 			req = requests.post(endpoint, data = data)
+			# next = reverse("index")
+			# return HttpResponseRedirect(next)
 			message = (req.content).decode()
 			data2 = json.loads(message)
 			# name = data['name']
@@ -34,38 +39,58 @@ def login_required(fun):
 			return HttpResponseRedirect("/login/")
 	return wrap
 
-def logout_required(fun):
-	def wrap(request,*args,**kwargs):
-		try: 
-			auth = request.COOKIES.get('auth')
-			name = request.COOKIES.get('name')
-			data = {'auth':auth, 'name':name}
-			endpoint = "http://exp-api:8000/checkAuth/"
-			req = requests.post(endpoint, data = data)
-			message = (req.content).decode()
-			data2 = json.loads(message)
-			if 'status' in data2 and data2['status'] == 200:
-				next = reverse("index")
-				return HttpResponseRedirect(next)
-			else:
-				return fun(request,*args,**kwargs)
+# def logout_required(fun):
+# 	def wrap(request,*args,**kwargs):
+# 		try: 
+# 			auth = request.COOKIES.get('auth')
+# 			name = request.COOKIES.get('name')
+# 			data = {'auth':auth, 'name':name}
+# 			endpoint = "http://exp-api:8000/checkAuth/"
+# 			req = requests.post(endpoint, data = data)
+# 			message = (req.content).decode()
+# 			data2 = json.loads(message)
+# 			if 'status' in data2 and data2['status'] == 200:
+# 				next = reverse("index")
+# 				return HttpResponseRedirect(next)
+# 			else:
+# 				return fun(request,*args,**kwargs)
 
-		except: 
-			return fun(request,*args,**kwargs)
-	return wrap
+# 		except: 
+# 			return fun(request,*args,**kwargs)
+# 	return wrap
+
+#@login_required
+# def old_cookie_logout(fun):
+# 	def wrap(request,*args,**kwargs):
+# 		return render(request, 'no_exist.html')
+# 	return wrap		
 
 # @login_required
+
 # def old_cookie_logout(fun):
 # 	def wrap(request,*args,**kwargs):
 # 		try:
-# 			auth = request.COOKIES.get('auth')
-# 			name = request.COOKIES.get('name')
+# 			auth_time = request.COOKIES.get('auth_time')
+# 			# now = datetime.datetime.now()
+# 			# naive_dt = auth_time.replace(tzinfo=None)
+# 			now = datetime.datetime.utcnow().replace(tzinfo=utc)
+# 			time_diff = now - auth_time
+# 			seconds = time_diff.total_seconds()
+# 			if time_diff >= 30:
+# 				return logout(request)
+# 			else:
+# 				return fun(request,*args,**kwargs)
+
+# 		except: 
+# 			return fun(request,*args,**kwargs)
+	# return wrap				
 			 
 
 def index(request):
 	try:
 		auth = request.COOKIES.get('auth')
 		name = request.COOKIES.get('name')
+		# auth_time = request.COOKIES.get('auth_time')
 		# person = Person.object.get(pk=auth.user_id)
 		return render(request, 'index.html', context={'username': name, 'auth': auth})
 
@@ -321,6 +346,7 @@ def createTrip(request):
 	#return render(request, 'tripForm.html', context={'error': 'Pete is dead!'})
 
 @login_required
+#@old_cookie_logout
 def createOrder(request, pk = None):
 	name = request.COOKIES.get('name')
 	auth = request.COOKIES.get('auth')
@@ -358,7 +384,7 @@ def createOrder(request, pk = None):
 
 
 @csrf_exempt
-@logout_required
+# @logout_required
 def login(request, pk = None):
 	if request.method == 'POST':
 		form = LoginForm(request.POST)
@@ -395,7 +421,7 @@ def login(request, pk = None):
 	return render(request,'login.html',{'form':form})
 
 @csrf_exempt
-@logout_required
+# @logout_required
 def signup(request, pk = None):
 	if request.method == 'POST':
 		form = SignUpForm(request.POST)
