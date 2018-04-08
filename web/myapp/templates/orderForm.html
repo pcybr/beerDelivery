@@ -8,12 +8,21 @@
 {% csrf_token %}
 
 <div>
-  <td>{{ form.store.label_tag }}</td>
+  <td> Beer: </td>
 
 {% for value in form.beer %}
   <td>{{ value }}</td>
 </div>
 {% endfor %}
+
+<div>
+  <td>Trip: </td>
+
+{% for value in form.trip %}
+  <td>{{ value }}</td>
+</div>
+{% endfor %}
+
 <div>
   <input type="submit" value="Make Order" />
   <input type="hidden" name="next" value="{{ next }}" />

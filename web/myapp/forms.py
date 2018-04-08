@@ -40,16 +40,21 @@ class OrderForm(forms.Form):
 		self.is_bound = None
 		self.fields = ('beer')
 		self.allBeers = kwargs.pop("allBeers")
+		self.allTrips = kwargs.pop('allTrips')
 		super(OrderForm, self).__init__(*args, **kwargs)
 		self.fields['beer'] = forms.ChoiceField(choices = self.allBeers)
+		self.fields['trip'] = forms.ChoiceField(choices = self.allTrips)
 
 class OrderCreate(forms.Form):
 	def __init__(self, *args, **kwargs):
 		beer = "Blank"
 		if 'beer' in kwargs:
 			beer = kwargs.pop("beer")
+		if 'trip' in kwargs:
+			trip = kwargs.pop("trip")
 		self._errors = None
 		self.is_bound = None
 		self.fields = ('beer')
 		super(OrderCreate, self).__init__(*args, **kwargs)
 		self.fields['beer'] = beer
+		self.fields['trip'] = trip
