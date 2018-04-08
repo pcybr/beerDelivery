@@ -68,12 +68,16 @@ def ApiStoreGetView(request, pk=None):
 	if request.method == 'GET':
 		try:
 			store = Store.objects.get(pk=pk)
-			inv = store.inventory
 			location = store.location
 			name = store.name
-			return JsonResponse({'name':name,'inventory':inv, 'location':location})
+			inv = store.inventory.all()
+			inventory = []
+			for beer in inv:
+				inventory.append(beer.name)
+
+			return JsonResponse({'name':name,'inventory':inventory, 'location':location})
 		except:
-				return JsonResponse({'error': 404, 'message': 'Store does not exist'})
+			return JsonResponse({'error': 404, 'message': store})
 	else:
 		store = Store.objects.get(pk=pk)
 		form = StoreForm(request.POST)
@@ -119,9 +123,11 @@ def ApiOrderGetView(request, pk=None):
 			order = Order.objects.get(pk=pk)
 			buyer = order.buyer.name
 			item = order.item.name
-			return JsonResponse({'order':order.order_id,'buyer':buyer, 'item':item})
+			order_trip = order.order_trip.trip_id
+			return JsonResponse({'order':order.order_id,'buyer':buyer, 'item':item,'order_trip':order_trip})
 		except:
-				return JsonResponse({'error': 404, 'message': 'Order does not exist'})
+			return JsonResponse({'error': order, 'message': 'Order does not exist'})
+
 	else:
 		trip = Trip.objects.get(pk=pk)
 		form = TripForm(request.POST)
@@ -203,25 +209,6 @@ def ApiCreatePerson(request):
 	else:
 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
-# def ApiCreatePerson(request):
-# 	try:
-# 		if request.method == 'POST':
-# 			form = PersonForm(request.POST)
-# 			if form.is_valid():
-# 				person = Person()
-# 				person.name = form.cleaned_data['name']
-# 				person.age = form.cleaned_data['age']
-# 				person.save()
-
-# 				return redirect(person)
-
-# 		else:
-# 			form = PersonForm()
-
-# 		return render(request, 'myapp/person_form.html', {'form': form})
-# 	except:
-# 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
-
 def ApiCreateBeer(request):
 	beer = Beer()
 	form = BeerForm(request.POST)
@@ -236,79 +223,37 @@ def ApiCreateBeer(request):
 	else:
 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
-# def ApiCreateBeer(request):
-# 	if request.method == 'POST':
-# 		form = BeerForm(request.POST)
-# 		if form.is_valid():
-# 			beer = Beer()
-# 			beer.size = form.cleaned_data['size']
-# 			beer.name = form.cleaned_data['name']
-# 			beer.price = form.cleaned_data['price']
-# 			beer.beer_type = form.cleaned_data['beer_type']
-# 			beer.bottle_type = form.cleaned_data['bottle_type']
-# 			beer.save()
-
-# 			return redirect(beer)
-# 	else:
-# 		form = BeerForm()
-
-# 	return render(request, 'myapp/beer_form.html', {'form': form})
-
 def ApiCreateStore(request):
 	store = Store()
 	form = StoreForm(request.POST)
 	if form.is_valid():
-		store.inventory = form.cleaned_data['inventory']
-		store.name = form.cleaned_data['name']
-		store.location = form.cleaned_data['location']
+		name = form.cleaned_data['name']
+		inventory = form.cleaned_data['inventory']
+		location = form.cleaned_data['location']
+
+		store.name = name
+		store.location = location
 		store.save()
+
+		for item in inventory:
+			store.inventory.add(item)
+
 		return redirect(store)
 	else:
 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
-
-# def ApiCreateStore(request):
-# 	if request.method == 'POST':
-# 		form = StoreForm(request.POST)
-# 		if form.is_valid():
-# 			store = Store()
-# 			store.inventory = form.cleaned_data['inventory']
-# 			store.name = form.cleaned_data['name']
-# 			store.location = form.cleaned_data['location']
-# 			store.save()
-
-# 			return redirect(store)
-# 	else:
-# 		form = StoreForm()
-
-# 	return render(request, 'myapp/store_form.html', {'form': form})
 
 def ApiCreateOrder(request):
 	order = Order()
 	form = OrderForm(request.POST)
 	if form.is_valid():
 		order.buyer = form.cleaned_data['buyer']
+		order.order_trip = form.cleaned_data['order_trip']
 		#order.buyer = request.user
 		order.item = form.cleaned_data['item']
 		order.save()
 		return redirect(order)
 	else:
 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
-
-# def ApiCreateOrder(request):
-# 	if request.method == 'POST':
-# 		form = OrderForm(request.POST)
-# 		if form.is_valid():
-# 			order = Order()
-# 			order.buyer = form.cleaned_data['buyer']
-# 			#order.buyer = request.user
-# 			order.item = form.cleaned_data['item']
-# 			order.save()
-
-# 			return redirect(order)
-# 	else:
-# 		form = OrderForm()
-
-# 	return render(request, 'myapp/order_form.html', {'form': form})
 
 def ApiCreateTrip(request):
 	trip = Trip()
@@ -322,23 +267,6 @@ def ApiCreateTrip(request):
 		return redirect(trip)
 	else:
 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
-
-# def ApiCreateTrip(request):
-# 	if request.method == 'POST':
-# 		form = TripForm(request.POST)
-# 		if form.is_valid():
-# 			trip = Trip()
-# 			#trip.runner = request.user
-# 			trip.runner = form.cleaned_data['runner']
-# 			trip.store = form.cleaned_data['store']
-# 			trip.active = True
-# 			trip.save()
-
-# 			return redirect(trip)
-# 	else:
-# 		form = TripForm()
-
-# 	return render(request, 'myapp/trip_form.html', {'form': form})
 
 def ApiDeletePerson(DeleteView,  pk=None):
 	model = Person
@@ -385,21 +313,6 @@ def ApiUpdatePerson(request, pk):
 	else:
 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
-# def ApiUpdatePerson(request, pk):
-# 	person = Person.objects.get(pk=pk)
-# 	if request.method == 'POST':
-# 		form = PersonForm(request.POST)
-# 		if form.is_valid():
-# 			person.name = form.cleaned_data['name']
-# 			person.age = form.cleaned_data['age']
-# 			person.save()
-
-# 			return redirect(person)
-# 	else:
-# 		form = PersonForm(initial={'name': person.name, 'age': person.age})
-
-# 	return render(request, 'myapp/person_update.html', {'form': form, 'person_name': person.name})
-
 def ApiUpdateBeer(request, pk):
 	beer = Beer.objects.get(pk=pk)
 	form = BeerForm(request.POST)
@@ -414,24 +327,6 @@ def ApiUpdateBeer(request, pk):
 	else:
 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
-# def ApiUpdateBeer(request, pk):
-# 	beer = Beer.objects.get(pk=pk)
-# 	if request.method == 'POST':
-# 		form = BeerForm(request.POST)
-# 		if form.is_valid():
-# 			beer.size = form.cleaned_data['size']
-# 			beer.name = form.cleaned_data['name']
-# 			beer.price = form.cleaned_data['price']
-# 			beer.beer_type = form.cleaned_data['beer_type']
-# 			beer.bottle_type = form.cleaned_data['bottle_type']
-# 			beer.save()
-
-# 			return redirect(beer)
-# 	else:
-# 		form = BeerForm(initial={'name': beer.name, 'size': beer.size, 'price': beer.price, 'beer_type': beer.beer_type, 'bottle_type': beer.bottle_type})
-
-# 	return render(request, 'myapp/beer_update.html', {'form': form, 'beer_name': beer.name})
-
 def ApiUpdateStore(request, pk):
 	store = Store.objects.get(pk=pk)
 	form = StoreForm(request.POST)
@@ -445,22 +340,6 @@ def ApiUpdateStore(request, pk):
 	else:
 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
-# def ApiUpdateStore(request, pk):
-# 	store = Store.objects.get(pk=pk)
-# 	if request.method == 'POST':
-# 		form = StoreForm(request.POST)
-# 		if form.is_valid():
-# 			store.inventory = form.cleaned_data['inventory']
-# 			store.name = form.cleaned_data['name']
-# 			store.location = form.cleaned_data['location']
-# 			store.save()
-
-# 			return redirect(store)
-
-# 	else:
-# 		form = StoreForm(initial={'name': store.name, 'inventory': store.inventory, 'location': store.location})
-
-# 	return render(request, 'myapp/store_update.html', {'form': form, 'store_name': store.name})
 
 def ApiUpdateOrder(request, pk):
 	order = Order.objects.get(pk=pk)
@@ -474,22 +353,6 @@ def ApiUpdateOrder(request, pk):
 	else:
 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
-# def ApiUpdateOrder(request, pk):
-# 	order = Order.objects.get(pk=pk)
-# 	if request.method == 'POST':
-# 		form = OrderForm(request.POST)
-# 		if form.is_valid():
-# 			order.buyer = form.cleaned_data['buyer']
-# 			#order.buyer = request.user
-# 			order.item = form.cleaned_data['item']
-# 			order.save()
-
-# 			return redirect(order)
-
-# 	else:
-# 		form = OrderForm(initial={'name': order.buyer, 'item': order.item})
-
-# 	return render(request, 'myapp/order_update.html', {'form': form, 'order_buyer': order.buyer})
 
 def ApiUpdateTrip(request, pk):
 	trip = Trip.objects.get(pk=pk)
@@ -503,24 +366,6 @@ def ApiUpdateTrip(request, pk):
 		return redirect(trip)
 	else:
 		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
-
-# def ApiUpdateTrip(request, pk):
-# 	trip = Trip.objects.get(pk=pk)
-# 	if request.method == 'POST':
-# 		form = TripForm(request.POST)
-# 		if form.is_valid():
-# 			#trip.runner = request.user
-# 			trip.runner = form.cleaned_data['runner']
-# 			trip.store = form.cleaned_data['store']
-# 			trip.active = True
-# 			trip.save()
-
-# 			return redirect(trip)
-
-# 	else:
-# 		form = TripForm(initial={'runner': trip.runner, 'store': trip.store, 'active': trip.active})
-
-# 	return render(request, 'myapp/trip_update.html', {'form': form, 'trip_runner': trip.runner})
 
 def ApiAllPersons(request):
 	people = Person.objects.all()
@@ -660,8 +505,10 @@ def createOrder(request, pk = None):
 			order = Order()
 			beer = Beer.objects.get(name= data['beer'])
 			buyer = Person.objects.get(name= data['name'])
+			trip = Trip.objects.get()
 			order.buyer = buyer
 			order.item = beer
+			order.order_trip = trip
 			order.save()
 			return JsonResponse({'status': 200, 'message': "Success"})
 		except:

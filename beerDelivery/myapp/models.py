@@ -52,8 +52,8 @@ class Beer(models.Model):
 
 class Store(models.Model):
 	store_id = models.AutoField(primary_key=True)
-	#inventory = models.ManyToManyField(Beer);
-	inventory = models.CharField(max_length = 100,default = "None")
+	inventory = models.ManyToManyField(Beer, blank = True);
+	# inventory = models.CharField(max_length = 100,default = "None")
 	location = models.CharField(max_length = 100)
 	name = models.CharField(max_length = 100)
 
@@ -71,6 +71,7 @@ class Order(models.Model):
 	order_id = models.AutoField(primary_key=True);
 	buyer = models.ForeignKey(Person);
 	item = models.ForeignKey(Beer);
+	order_trip = models.ForeignKey('Trip')
 
 	def __str__(self):
 	    """
@@ -88,7 +89,7 @@ class Trip(models.Model):
 	store = models.ForeignKey(Store, default=1);
 	time_created = models.DateTimeField(auto_now_add = True);
 	active = models.BooleanField();
-	orders = models.ManyToManyField(Order, default = None);
+	# orders = models.ManyToManyField(Order, default = None, blank = True);
 
 	def __str__(self):
 	    """

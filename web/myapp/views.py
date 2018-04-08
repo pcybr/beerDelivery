@@ -122,7 +122,8 @@ def getOrder(request,pk = None):
 		data = json.loads(response)
 		buyer = data['buyer']
 		item = data['item']
-		return render(request,'order_detail_view.html',context={'buyer':buyer,'item':item,'auth':auth})
+		trip = data['order_trip']
+		return render(request,'order_detail_view.html',context={'buyer':buyer,'item':item,'auth':auth,'order_trip':trip})
 	except: 
 		obj = 'Order'
 		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
@@ -290,6 +291,27 @@ def getAllTrips(request, pk = None):
 		full_list[keys] = name
 	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth})
 
+def getAllTripsList():
+	endpoint = "http://exp-api:8000/trip/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = []
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/trip/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		name = data2['runner']
+		# full_list[keys] = name
+		full_list.append(name)
+		choices = ()
+		for values in full_list:
+			tup = (str(values), str(values))
+			choices = choices + (tup,)
+	return choices
+
 @login_required
 def getAllOrders(request, pk = None):
 	auth = request.COOKIES.get('auth')
@@ -351,17 +373,19 @@ def createOrder(request, pk = None):
 	name = request.COOKIES.get('name')
 	auth = request.COOKIES.get('auth')
 	next = reverse('index')
-	CHOICES = getAllBeersList()
+	BEER_CHOICES = getAllBeersList()
+	TRIP_CHOICES = getAllTripsList()
 	if not auth:
 		response = HttpResponseRedirect(next)
 	if request.method == 'GET':
-		form = OrderForm(allBeers = CHOICES)
+		form = OrderForm(allBeers = BEER_CHOICES, allTrips = TRIP_CHOICES)
 		return render(request, 'orderForm.html', {'form':form,'auth':auth})
-	form2 = OrderCreate(beer = request.POST['beer'])
+	form2 = OrderCreate(beer = request.POST['beer'],trip = request.POST['trip'])
 	try:
 		data = request.POST.copy()
 		data['name'] = name
 		beer = data['beer']
+		trip = data['trip']
 		endpoint = "http://exp-api:8000/createOrder/"
 		req = requests.post(endpoint, data = data)
 		status = req.status_code
