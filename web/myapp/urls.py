@@ -12,8 +12,10 @@ urlpatterns = [
 	url(r'^people/', views.getAllPeople, name = 'all_people'),
 	url(r'^beers/', views.getAllBeers, name = 'all_beers'),
 	url(r'^stores/', views.getAllStores, name = 'all_stores'),
-	url(r'^trips/', views.getAllTrips, name = 'all_trips'),
+	url(r'^trips/', views.getMyTrips, name = 'my_trips'),
+	url(r'^activetrips/', views.getActiveTrips, name = 'active_trips'),
 	url(r'^orders/', views.getAllOrders, name = 'all_orders'),
+	url(r'^myorders/', views.getMyOrders, name = 'my_orders'),
 
 	url(r'^login/', views.login, name = 'login'),
 	url(r'^signup/', views.signup, name = 'signup'),
