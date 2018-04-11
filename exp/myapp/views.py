@@ -8,6 +8,7 @@ import urllib.request
 import urllib.parse
 import json
 import requests
+from kafka import KafkaProducer
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -125,7 +126,11 @@ def createTrip(request, pk = None):
 			req = requests.post(endpoint,data=data)
 			message = str((req.content).decode())
 			ret = json.loads(message)
-			return JsonResponse(ret)
+			if "error" not in ret:
+				producer = KafkaProducer(bootstrap_servers='kafka:9092')
+				listing = {'runner':ret['runner'],'store': ret['store'],'trip_id': ret['trip_id']}
+				producer.send('trip_topic', json.dumps(listing).encode('utf-8'))
+			return JsonResponse(ret) 
 		except:
 			return JsonResponse({'status':401, 'message': ret['error']})
 
@@ -133,13 +138,9 @@ def createTrip(request, pk = None):
 def createOrder(request, pk = None):
 	if request.method == "POST":
 		try: 
-
 			data = request.POST.copy()
-
 			endpoint = "http://models-api:8000/api/v1/createOrder"
-
 			req = requests.post(endpoint,data=data)
-
 			message = str((req.content).decode())
 			ret = json.loads(message)
 			return JsonResponse(ret)
