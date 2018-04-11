@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import make_password, check_password
 import os
 import hmac
+# from kafka import KafkaProducer
 
 def index(request):
 	return HttpResponse("Hello, world. You're at Myapps index.")
@@ -489,8 +490,11 @@ def createTrip(request, pk = None):
 			trip.store = store
 			trip.active = True
 			trip.save()
+			a = 'hello'
 			trip = Trip.objects.latest('time_created')
-			return JsonResponse({'status': 200, 'message': "Success", 'pk' : trip.trip_id })
+			trip.runner = runner
+			trip.store = store
+			return JsonResponse({'status': 200, 'message': "Success", 'pk' : trip.trip_id, 'runner': trip.runner.name, 'store': trip.store.name, 'trip_id': trip.trip_id})
 		except:
 			return JsonResponse({'status': 400, 'error': "error"})
 
