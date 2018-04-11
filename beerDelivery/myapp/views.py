@@ -100,7 +100,7 @@ def ApiTripGetView(request, pk=None):
 			time_created = trip.time_created
 			active = trip.active
 			#orders = trip.orders
-			return JsonResponse({'runner':runner, 'store':store, 'time':time_created, 'active':active})
+			return JsonResponse({'runner':runner, 'store':store, 'time':time_created, 'active':active, 'trip_id':pk})
 		except:
 			return JsonResponse({'error': 404, 'message': 'Trip does not exist'})
 	else:
@@ -502,17 +502,17 @@ def createOrder(request, pk = None):
 	if request.method == 'POST':
 		try:
 			data = request.POST.copy()
-			order = Order()
 			beer = Beer.objects.get(name= data['beer'])
 			buyer = Person.objects.get(name= data['name'])
-			trip = Trip.objects.get()
+			trip = Trip.objects.get(trip_id= data['trip'])
+			order = Order()
 			order.buyer = buyer
 			order.item = beer
 			order.order_trip = trip
 			order.save()
 			return JsonResponse({'status': 200, 'message': "Success"})
 		except:
-			return JsonResponse({'status':400, 'error': "error"})
+			return JsonResponse({'status':400, 'error': data})
 
 	else:
 		return JsonResponse({'error': "Not POST"})

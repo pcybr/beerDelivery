@@ -291,6 +291,46 @@ def getAllTrips(request, pk = None):
 		full_list[keys] = name
 	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth})
 
+
+@login_required
+def getMyTrips(request, pk = None):
+	auth = request.COOKIES.get('auth')
+	nameToken = request.COOKIES.get('name')
+	endpoint = "http://exp-api:8000/trip/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = {}
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/trip/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		name = data2['runner']
+		if nameToken == name:
+			full_list[keys] = name
+	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth})
+
+@login_required
+def getActiveTrips(request, pk = None):
+	auth = request.COOKIES.get('auth')
+	endpoint = "http://exp-api:8000/trip/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = {}
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/trip/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		name = data2['runner']
+		active = data2['active']
+		full_list[keys] = name
+	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth})
+
 def getAllTripsList():
 	endpoint = "http://exp-api:8000/trip/all"
 	req = urllib.request.Request(endpoint)
@@ -305,7 +345,10 @@ def getAllTripsList():
 		data2 = json.loads(response2)
 		name = data2['runner']
 		# full_list[keys] = name
-		full_list.append(name)
+		active = data2['active']
+		trip_id = data2['trip_id']
+		if active == True:
+			full_list.append(trip_id)
 		choices = ()
 		for values in full_list:
 			tup = (str(values), str(values))
@@ -329,6 +372,27 @@ def getAllOrders(request, pk = None):
 		name = data2['buyer']
 		full_list[name] = keys
 	return render(request, 'orders.html', context={'full_list':full_list,'auth':auth})
+
+@login_required
+def getMyOrders(request, pk = None):
+	auth = request.COOKIES.get('auth')
+	name = request.COOKIES.get('name')
+	endpoint = "http://exp-api:8000/order/all"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)	
+	new_list = data
+	full_list = {}
+	for keys in new_list:
+		endpoint2 = "http://exp-api:8000/order/" + str(keys)
+		req2 = urllib.request.Request(endpoint2)
+		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		buyer = data2['buyer']
+		if name == buyer:
+			full_list[buyer] = keys
+	return render(request, 'orders.html', context={'full_list':full_list,'auth':auth})
+
 
 @login_required
 def createTrip(request):
@@ -367,7 +431,7 @@ def createTrip(request):
 		return render(request, 'tripForm.html', context={'error': "No post",'auth':auth})
 	#return render(request, 'tripForm.html', context={'error': 'Pete is dead!'})
 
-@login_required
+# @login_required
 #@old_cookie_logout
 def createOrder(request, pk = None):
 	name = request.COOKIES.get('name')
@@ -386,6 +450,7 @@ def createOrder(request, pk = None):
 		data['name'] = name
 		beer = data['beer']
 		trip = data['trip']
+		data['trip_id'] = getTrip(name)
 		endpoint = "http://exp-api:8000/createOrder/"
 		req = requests.post(endpoint, data = data)
 		status = req.status_code
@@ -403,7 +468,7 @@ def createOrder(request, pk = None):
 		# request.method = "GET"
 		# return getTrip(request, pk = data['pk'])
 	except:
-		return render(request, 'orderForm.html', context={'error': message})
+		return render(request, 'orderForm.html', context={'error': data})
 
 
 
