@@ -328,7 +328,8 @@ def getActiveTrips(request, pk = None):
 		data2 = json.loads(response2)
 		name = data2['runner']
 		active = data2['active']
-		full_list[keys] = name
+		if active == True:
+			full_list[keys] = name
 	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth})
 
 def getAllTripsList():
@@ -431,7 +432,7 @@ def createTrip(request):
 		return render(request, 'tripForm.html', context={'error': message,'auth':auth})
 	#return render(request, 'tripForm.html', context={'error': 'Pete is dead!'})
 
-# @login_required
+@login_required
 #@old_cookie_logout
 def createOrder(request, pk = None):
 	name = request.COOKIES.get('name')
@@ -450,7 +451,8 @@ def createOrder(request, pk = None):
 		data['name'] = name
 		beer = data['beer']
 		trip = data['trip']
-		data['trip_id'] = getTrip(name)
+		data['trip_id'] = getTrip(trip).trip_id
+
 		endpoint = "http://exp-api:8000/createOrder/"
 		req = requests.post(endpoint, data = data)
 		status = req.status_code
