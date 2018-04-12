@@ -455,15 +455,9 @@ def createOrder(request, pk = None):
 		endpoint = "http://exp-api:8000/createOrder/"
 
 		req = requests.post(endpoint, data = data)
-
 		status = req.status_code
-
 		message = (req.content).decode()
-		test = 'lksdf'
-
 		resp = json.loads(message)
-
-
 		if resp['status'] != 200:
 			form = OrderForm(allStores = CHOICES)
 			error = resp['error']
