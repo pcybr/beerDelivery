@@ -142,11 +142,11 @@ def createOrder(request, pk = None):
 			endpoint = "http://models-api:8000/api/v1/createOrder"
 			req = requests.post(endpoint,data=data)
 			message = str((req.content).decode())
+			ret = json.loads(message)
 			if "error" not in ret:
 				producer = KafkaProducer(bootstrap_servers='kafka:9092')
-				listing = {'buyer':ret['buyer'],'order_id': ret['order_id'],'trip_id': ret['trip_id']}
+				listing = {'buyer': ret['buyer'], 'order_id': ret['order_id'], 'trip_id': ret['trip_id']}
 				producer.send('trip_topic', json.dumps(listing).encode('utf-8'))
-			ret = json.loads(message)
 			return JsonResponse(ret)
 		except:
 			return JsonResponse({'status':401, 'message': ret['error']})

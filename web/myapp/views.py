@@ -451,12 +451,16 @@ def createOrder(request, pk = None):
 		data['name'] = name
 		beer = data['beer']
 		trip = data['trip']
-		data['trip_id'] = getTrip(trip).trip_id
-
+		data['trip_id'] = trip 
 		endpoint = "http://exp-api:8000/createOrder/"
+
 		req = requests.post(endpoint, data = data)
+
 		status = req.status_code
+
 		message = (req.content).decode()
+		test = 'lksdf'
+
 		resp = json.loads(message)
 
 

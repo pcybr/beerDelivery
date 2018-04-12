@@ -508,7 +508,7 @@ def createOrder(request, pk = None):
 			data = request.POST.copy()
 			beer = Beer.objects.get(name= data['beer'])
 			buyer = Person.objects.get(name= data['name'])
-			trip = Trip.objects.get(trip_id = data['trip'])
+			trip = Trip.objects.get(trip_id = data['trip_id'])
 			order = Order()
 			order.buyer = buyer
 			order.item = beer
@@ -516,7 +516,7 @@ def createOrder(request, pk = None):
 			order.save()
 			return JsonResponse({'status': 200, 'message': "Success", 'pk' : order.order_id , 'order_id' : order.order_id, 'buyer' : order.buyer.name, 'trip_id' : trip.trip_id})
 		except:
-			return JsonResponse({'status':400, 'error': data})
+			return JsonResponse({'status':400, 'error': trip})
 
 	else:
 		return JsonResponse({'error': "Not POST"})
