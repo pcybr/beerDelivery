@@ -6,6 +6,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+#myInput {
+    background-image: url('/css/searchicon.png');
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -20,6 +32,8 @@
 <body>
   <header>
     <nav class="navbar navbar-default navbar-fixed-top" style="">
+     <form method="post" action="{% url 'createOrder' %}">
+     <input type="search" id="myInput" onkeyup="myFunction()" placeholder="Search by keyword..." title="Type in a name" style="height: 52px; width: 300px; ">
       <ul class="nav navbar-nav navbar-right" >
         <li><a href = "/" class="btn btn-default btn-lg active" role="button">Home</a></li>
         {% if auth %}
@@ -42,10 +56,31 @@
     </nav>
   </header>
 
-  <div class="container-fluid"  style="margin-top: 100px; ">
+  <div class="container-fluid"  style="margin-top: 30px; ">
       <h2></h2>
-      <div class="col-sm-10 ">{% block content %}{% endblock %}    
+      <div class="col-sm-10">{% block content %}{% endblock %}    
       </div>
     </div>
 </body>
+
+
+
+
+  <script>
+    function myFunction() {
+      var input, filter, ul, li, a, i;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      ul = document.getElementById("myUL");
+      li = ul.getElementsByTagName("li");
+      for (i = 0; i < li.length; i++) {
+          a = li[i].getElementsByTagName("a")[0];
+          if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+              li[i].style.display = "";
+          } else {
+              li[i].style.display = "none";
+          }
+      }
+    }
+  </script>
 </html>
