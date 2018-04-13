@@ -23,6 +23,7 @@ urlpatterns = [
 
 	url(r'^trip/create/', views.createTrip, name = 'createTrip'),
 	url(r'^order/create/', views.createOrder, name = 'createOrder'),
+	url(r'^search/', views.search, name = 'search'),
 
 
 ]

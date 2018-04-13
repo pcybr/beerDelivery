@@ -8,7 +8,7 @@ from django.urls import reverse
 import urllib.request
 import json
 import requests
-from .forms import LoginForm, SignUpForm, TripForm, TripCreate, OrderForm, OrderCreate
+from .forms import LoginForm, SignUpForm, TripForm, TripCreate, OrderForm, OrderCreate, SearchForm
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 import datetime
@@ -567,5 +567,24 @@ def logout(request):
 	response.delete_cookie('name')
 	return response
 
+@csrf_exempt
+def search(request):
+	if request.method == 'POST':
+		form = SearchForm(request.POST)
+		if True:
+			try:
+				data = request.POST.copy()
+				query = data['query']
+				endpoint = "http://exp-api:8000/search/"
+				req = requests.post(endpoint, data = data)
+				status = req.status_code
+				message = (req.content).decode()
+				resp = json.loads(message)
+				return render(request,'search.html',context={'data':resp['search']})
+		
+			except:
+				return render(request, 'index.html', context={'error': data})
+		else:
+			return render(request, 'index.html', context={'error': request.POST})
 
 

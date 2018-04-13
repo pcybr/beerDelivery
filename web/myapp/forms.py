@@ -12,6 +12,9 @@ class SignUpForm(forms.Form):
 	name = forms.CharField(max_length = 90)
 	age = forms.IntegerField(min_value = 21)
 
+class SearchForm(forms.Form):
+	query = forms.CharField(max_length = 100)
+
 class TripForm(forms.Form):
 	#allStores = getAllStoresList()
 	def __init__(self,*args,**kwargs):
@@ -58,3 +61,7 @@ class OrderCreate(forms.Form):
 		super(OrderCreate, self).__init__(*args, **kwargs)
 		self.fields['beer'] = beer
 		self.fields['trip'] = trip
+
+
+
+

@@ -204,3 +204,24 @@ def checkAuth(request):
 		return JsonResponse(data)
 	except:
 		return JsonResponse({'status':401, 'error': 'Invalid Endpoint'})
+
+@csrf_exempt
+def search(request):
+	ret = {}
+	try:
+		data = request.POST.copy()
+		es = Elasticsearch(['es'])
+		search = es.search(index='listing_index', body={'query': {'query_string': {'query': data}}, 'size': 10})
+		ret['status'] = 200
+		output = search['hits']['hits']
+		lst = []
+		for value in output:
+			lst.append(value['_source'])
+
+		ret['search'] = lst
+
+		return JsonResponse(ret)
+
+	except:
+		return JsonResponse('status':400, 'error':'Invalid Search Query')
+
