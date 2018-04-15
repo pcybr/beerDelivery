@@ -24,5 +24,7 @@ urlpatterns = [
 	url(r'^trip/create/', views.createTrip, name = 'createTrip'),
 	url(r'^order/create/', views.createOrder, name = 'createOrder'),
 
+	url(r'^trip/(?P<pk>\d+)/endTrip$', views.EndTrip, name = 'end_trip'),
+
 
 ]

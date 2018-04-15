@@ -22,4 +22,6 @@ urlpatterns = [
 	url(r'^logout/', views.logout, name = 'logout'),
 	url(r'^checkAuth/', views.checkAuth, name = 'check_auth'),
 
+	url(r'^trip/(?P<pk>\d+)/endTrip$', views.endTrip, name = 'end_Trip'),	
+
 ]

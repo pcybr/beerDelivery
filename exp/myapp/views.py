@@ -64,6 +64,14 @@ def getTrip(request,pk = None):
 	data = json.loads(response)
 	return JsonResponse(data)
 
+def endTrip(request, pk=None):
+	endpoint = "http://models-api:8000/api/v1/trip/" + str(pk) + "/end"
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	return JsonResponse(data)
+
+
 def getStore(request,pk = None):
 	'''
 	View Function for individual store

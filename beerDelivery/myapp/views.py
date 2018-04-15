@@ -117,6 +117,15 @@ def ApiTripGetView(request, pk=None):
 		else:
 			return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
+def ApiEndTripView(request, pk):
+	try:
+		trip = Trip.objects.get(pk = pk)
+		trip.active = False
+		trip.save()
+		return redirect(trip)
+	except:
+		return JsonResponse({'error': 400, 'message': 'Invalid Input'})
+
 
 def ApiOrderGetView(request, pk=None):
 	if request.method == 'GET':

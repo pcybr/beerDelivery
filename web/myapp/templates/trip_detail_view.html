@@ -7,4 +7,8 @@
   <p><strong>Active:</strong> {{ active }}</p> 
   <!-- <p><strong>Orders:</strong> {{ orders }}</p> -->
 
+{% if name == runner and active == True %}
+	<h1> <a href="{{ url }}", class="button">End Trip</a> </h1>
+{% endif %}
+
 {% endblock %}
