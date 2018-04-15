@@ -9,7 +9,7 @@ import urllib.parse
 import json
 import requests
 from kafka import KafkaProducer
-
+from elasticsearch import Elasticsearch
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -210,8 +210,9 @@ def search(request):
 	ret = {}
 	try:
 		data = request.POST.copy()
+		info = data['all']
 		es = Elasticsearch(['es'])
-		search = es.search(index='listing_index', body={'query': {'query_string': {'query': data}}, 'size': 10})
+		search = es.search(index='listing_index', body= {'query': {'query_string': {'query': info }}, 'size': 10})
 		ret['status'] = 200
 		output = search['hits']['hits']
 		lst = []
@@ -223,5 +224,5 @@ def search(request):
 		return JsonResponse(ret)
 
 	except:
-		return JsonResponse('status':400, 'error':'Invalid Search Query')
+		return JsonResponse({'status':400, 'error': output})
 

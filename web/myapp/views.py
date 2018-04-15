@@ -12,6 +12,7 @@ from .forms import LoginForm, SignUpForm, TripForm, TripCreate, OrderForm, Order
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 import datetime
+from elasticsearch import Elasticsearch
 from django.utils.timezone import utc
 
 def login_required(fun):
@@ -574,16 +575,16 @@ def search(request):
 		if True:
 			try:
 				data = request.POST.copy()
-				query = data['query']
+				query = data['all']
 				endpoint = "http://exp-api:8000/search/"
 				req = requests.post(endpoint, data = data)
 				status = req.status_code
 				message = (req.content).decode()
 				resp = json.loads(message)
-				return render(request,'search.html',context={'data':resp['search']})
+				return render(request,'search.html',context={'data': resp})
 		
 			except:
-				return render(request, 'index.html', context={'error': data})
+				return render(request, 'index.html', context={'error': message})
 		else:
 			return render(request, 'index.html', context={'error': request.POST})
 
