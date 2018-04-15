@@ -23,4 +23,6 @@ urlpatterns = [
 	url(r'^checkAuth/', views.checkAuth, name = 'check_auth'),
 	url(r'^search/', views.search, name = 'search'),
 
+	url(r'^trip/(?P<pk>\d+)/endTrip$', views.endTrip, name = 'end_Trip'),	
+
 ]

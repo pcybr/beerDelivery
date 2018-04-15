@@ -61,7 +61,4 @@ class OrderCreate(forms.Form):
 		super(OrderCreate, self).__init__(*args, **kwargs)
 		self.fields['beer'] = beer
 		self.fields['trip'] = trip
-
-
-
-
+    

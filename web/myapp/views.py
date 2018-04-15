@@ -133,6 +133,7 @@ def getOrder(request,pk = None):
 def getTrip(request,pk = None):
 	try:
 		auth = request.COOKIES.get('auth')
+		name = request.COOKIES.get('name')
 		endpoint = "http://exp-api:8000/trip/" + str(pk)
 		req = urllib.request.Request(endpoint)
 		response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -141,7 +142,8 @@ def getTrip(request,pk = None):
 		store = data['store']
 		time_created = data['time']
 		active = data['active']
-		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth})
+		url = pk + "/endTrip"
+		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth, 'url':url, 'name':name})
 	except: 
 		obj = 'Trip'
 		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
@@ -569,6 +571,24 @@ def logout(request):
 	return response
 
 @csrf_exempt
+@login_required
+def EndTrip(request,pk = None):
+	try:
+		auth = request.COOKIES.get('auth')
+		endpoint = "http://exp-api:8000/trip/" + str(pk) + "/endTrip"
+		req = urllib.request.Request(endpoint)
+		response = urllib.request.urlopen(req).read().decode('utf-8')
+		data = json.loads(response)
+		runner = data['runner']
+		store = data['store']
+		time_created = data['time']
+		active = data['active']
+		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth})
+	except: 
+		obj = 'Trip'
+		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
+
+  
 def search(request):
 	if request.method == 'POST':
 		form = SearchForm(request.POST)
@@ -587,5 +607,4 @@ def search(request):
 				return render(request, 'index.html', context={'error': message})
 		else:
 			return render(request, 'index.html', context={'error': request.POST})
-
 
