@@ -9,7 +9,7 @@ import urllib.parse
 import json
 import requests
 from kafka import KafkaProducer
-
+from elasticsearch import Elasticsearch
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -212,3 +212,25 @@ def checkAuth(request):
 		return JsonResponse(data)
 	except:
 		return JsonResponse({'status':401, 'error': 'Invalid Endpoint'})
+
+@csrf_exempt
+def search(request):
+	ret = {}
+	try:
+		data = request.POST.copy()
+		info = data['all']
+		es = Elasticsearch(['es'])
+		search = es.search(index='listing_index', body= {'query': {'query_string': {'query': info }}, 'size': 10})
+		ret['status'] = 200
+		output = search['hits']['hits']
+		lst = []
+		for value in output:
+			lst.append(value['_source'])
+
+		ret['search'] = lst
+
+		return JsonResponse(ret)
+
+	except:
+		return JsonResponse({'status':400, 'error': output})
+
