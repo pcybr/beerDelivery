@@ -101,7 +101,14 @@ def ApiTripGetView(request, pk=None):
 			time_created = trip.time_created
 			active = trip.active
 			#orders = trip.orders
-			return JsonResponse({'runner':runner, 'store':store, 'time':time_created, 'active':active, 'trip_id':pk})
+
+			all_orders = Order.objects.all()
+			trip_orders = []
+			for o in all_orders:
+				if o.order_trip.trip_id == trip.trip_id:
+					trip_orders.append(o.order_id)
+
+			return JsonResponse({'runner':runner, 'store':store, 'time':time_created, 'active':active, 'trip_id':pk, 'orders':trip_orders})
 		except:
 			return JsonResponse({'error': 404, 'message': 'Trip does not exist'})
 	else:

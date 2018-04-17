@@ -2,6 +2,6 @@
 
 {% block content %}
 {% for order,pk in full_list.items %}
-<a href="/order/{{ pk }}"><h2>{{ order }}'s Order</h2></a>
+<a href="/order/{{ order }}"><h2>{{ pk }}'s Order</h2></a>
 {% endfor %}
 {% endblock %}

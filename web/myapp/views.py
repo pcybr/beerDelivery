@@ -95,8 +95,12 @@ def getTrip(request,pk = None):
 		store = data['store']
 		time_created = data['time']
 		active = data['active']
+
+		orders = data['orders']
+
 		url = str(pk) + "/endTrip"
-		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth, 'url':url, 'name':name})
+
+		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth, 'url':url, 'name':name,'orders':orders})
 	except: 
 		obj = 'Trip'
 		return render(request,'no_exist.html',context={'object':data,'auth':auth})
@@ -327,7 +331,7 @@ def getAllOrders(request, pk = None):
 		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
 		data2 = json.loads(response2)
 		name = data2['buyer']
-		full_list[name] = keys
+		full_list[keys] = name
 	return render(request, 'orders.html', context={'full_list':full_list,'auth':auth})
 
 @login_required
@@ -347,7 +351,7 @@ def getMyOrders(request, pk = None):
 		data2 = json.loads(response2)
 		buyer = data2['buyer']
 		if name == buyer:
-			full_list[buyer] = keys
+			full_list[keys] = buyer
 	return render(request, 'orders.html', context={'full_list':full_list,'auth':auth})
 
 
