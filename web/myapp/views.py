@@ -40,53 +40,6 @@ def login_required(fun):
 			return HttpResponseRedirect("/login/")
 	return wrap
 
-# def logout_required(fun):
-# 	def wrap(request,*args,**kwargs):
-# 		try: 
-# 			auth = request.COOKIES.get('auth')
-# 			name = request.COOKIES.get('name')
-# 			data = {'auth':auth, 'name':name}
-# 			endpoint = "http://exp-api:8000/checkAuth/"
-# 			req = requests.post(endpoint, data = data)
-# 			message = (req.content).decode()
-# 			data2 = json.loads(message)
-# 			if 'status' in data2 and data2['status'] == 200:
-# 				next = reverse("index")
-# 				return HttpResponseRedirect(next)
-# 			else:
-# 				return fun(request,*args,**kwargs)
-
-# 		except: 
-# 			return fun(request,*args,**kwargs)
-# 	return wrap
-
-#@login_required
-# def old_cookie_logout(fun):
-# 	def wrap(request,*args,**kwargs):
-# 		return render(request, 'no_exist.html')
-# 	return wrap		
-
-# @login_required
-
-# def old_cookie_logout(fun):
-# 	def wrap(request,*args,**kwargs):
-# 		try:
-# 			auth_time = request.COOKIES.get('auth_time')
-# 			# now = datetime.datetime.now()
-# 			# naive_dt = auth_time.replace(tzinfo=None)
-# 			now = datetime.datetime.utcnow().replace(tzinfo=utc)
-# 			time_diff = now - auth_time
-# 			seconds = time_diff.total_seconds()
-# 			if time_diff >= 30:
-# 				return logout(request)
-# 			else:
-# 				return fun(request,*args,**kwargs)
-
-# 		except: 
-# 			return fun(request,*args,**kwargs)
-	# return wrap				
-			 
-
 def index(request):
 	try:
 		auth = request.COOKIES.get('auth')
@@ -142,11 +95,11 @@ def getTrip(request,pk = None):
 		store = data['store']
 		time_created = data['time']
 		active = data['active']
-		url = pk + "/endTrip"
+		url = str(pk) + "/endTrip"
 		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth, 'url':url, 'name':name})
 	except: 
 		obj = 'Trip'
-		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
+		return render(request,'no_exist.html',context={'object':data,'auth':auth})
 
 @login_required
 def getBeer(request,pk = None):
@@ -588,23 +541,35 @@ def EndTrip(request,pk = None):
 		obj = 'Trip'
 		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 
-  
+@csrf_exempt
 def search(request):
 	if request.method == 'POST':
+		auth = request.COOKIES.get('auth')
 		form = SearchForm(request.POST)
 		if True:
 			try:
 				data = request.POST.copy()
 				query = data['all']
+				search_field = data['search']
 				endpoint = "http://exp-api:8000/search/"
 				req = requests.post(endpoint, data = data)
 				status = req.status_code
 				message = (req.content).decode()
 				resp = json.loads(message)
-				return render(request,'search.html',context={'data': resp})
-		
+				if 'error'  not in resp:
+					if search_field == "Trip":
+						info = resp['search'][0]
+						trip_id = info['trip_id']
+						url = "/trip/"+ str(trip_id)
+						return HttpResponseRedirect(url)
+					else:
+						info = resp['search'][0]
+						return JsonResponse(info)
+				else:
+					obj = 'Trip'
+					return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 			except:
-				return render(request, 'index.html', context={'error': message})
+				return render(request, 'index.html', context={'error': resp['error']})
 		else:
 			return render(request, 'index.html', context={'error': request.POST})
 

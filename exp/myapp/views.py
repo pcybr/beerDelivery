@@ -219,16 +219,22 @@ def search(request):
 	try:
 		data = request.POST.copy()
 		info = data['all']
+		search_type = data['search']
 		es = Elasticsearch(['es'])
-		search = es.search(index='listing_index', body= {'query': {'query_string': {'query': info }}, 'size': 10})
+		if search_type == "Trip":
+			search = es.search(index='listing_index', body= {'query': {'query_string': {'query': info }}, 'size': 10})
+		else:
+			search = es.search(index='listing_index', body= {'query': {'query_string': {'query': info }}, 'size': 10})
+
 		ret['status'] = 200
 		output = search['hits']['hits']
 		lst = []
 		for value in output:
 			lst.append(value['_source'])
-
-		ret['search'] = lst
-
+		if len(lst) != 0:
+			ret['search'] = lst
+		else:
+			ret['error'] = "Item not found"
 		return JsonResponse(ret)
 
 	except:

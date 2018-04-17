@@ -14,6 +14,12 @@ class SignUpForm(forms.Form):
 
 class SearchForm(forms.Form):
 	query = forms.CharField(max_length = 100)
+	SEARCH = (
+		('Trip', 'Trip'),
+		('Order', 'Order'),
+	)
+	search_type = forms.ChoiceField(choices = SEARCH, widget = forms.Select())
+
 
 class TripForm(forms.Form):
 	#allStores = getAllStoresList()
