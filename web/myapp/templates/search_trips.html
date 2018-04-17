@@ -1,0 +1,8 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Matching Trips:</h1>
+{% for item in full_list %}
+	<a href="../trip/{{ item.trip_id }}"><h2>{{ item.runner }}'s current trip.</h2></a>
+{% endfor %}
+{% endblock %}

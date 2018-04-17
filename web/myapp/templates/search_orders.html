@@ -1,0 +1,8 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Matching Orders:</h1>
+{% for item in full_list %}
+	<a href="../order/{{ item.order_id }}"><h2>{{ item.buyer }}'s order.</h2></a>
+{% endfor %}
+{% endblock %}

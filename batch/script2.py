@@ -19,7 +19,7 @@ while True:
 			listing = json.loads((index.value).decode('utf-8'))
 			print("Order Listing",listing)
 			es.index(index='listing_index_order', doc_type='listing', id=listing['order_id'], body=listing)
-			es.indices.refresh(index="listing_index")
+			es.indices.refresh(index="listing_index_order")
 
 		continue
 

@@ -1,0 +1,8 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Matching People:</h1>
+{% for item in full_list %}
+	<a href="../person/{{ item.person_id }}"><h2>{{ item.name }}</h2></a>
+{% endfor %}
+{% endblock %}

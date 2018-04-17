@@ -558,23 +558,31 @@ def search(request):
 				resp = json.loads(message)
 				if 'error'  not in resp:
 					if search_field == "Trip":
-						info = resp['search'][0]
-						trip_id = info['trip_id']
-						url = "/trip/"+ str(trip_id)
-						return HttpResponseRedirect(url)
+						info = resp['search']
+						# trip_id = info['trip_id']
+						# url = "/trip/"+ str(trip_id)
+						return render(request, 'search_trips.html', context={'full_list':info, 'auth':auth})
+
+						# return HttpResponseRedirect(url)
 					elif search_field == "Order":
-						info = resp['search'][0]
-						return JsonResponse(info)
+						info = resp['search']
+						# order_id = info['order_id']
+						# url = "/order/"+ str(order_id)
+						# return HttpResponseRedirect(url)
+						return render(request, 'search_orders.html', context={'full_list':info, 'auth':auth})
 					else:
-						info = resp['search'][0]
-						order_id = info['order_id']
-						url = "/order/"+ str(order_id)
-						return HttpResponseRedirect(url)
+						info = resp['search']
+						# person_id = info['person_id']
+						# url = "/person/"+ str(person_id)
+						# return HttpResponseRedirect(url)
+						return render(request, 'search_people.html', context={'full_list':info, 'auth':auth})
 				else:
 					if search_field == "Trip":
 						obj = 'Trip'
-					else:
+					elif search_field == "Order":
 						obj = 'Order'
+					else:
+						obj = 'Person'
 					return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 			except:
 				return render(request, 'index.html', context={'error': resp['error']})
