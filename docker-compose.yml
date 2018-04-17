@@ -61,6 +61,6 @@ batch:
    links:
       - kafka:kafka
       - es:es
-   command: > 
-          bash -c "python script.py
-          && python script2.py"
+   command: >
+          bash -c "python script.py & python script2.py"
+
