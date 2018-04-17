@@ -564,9 +564,14 @@ def search(request):
 						return HttpResponseRedirect(url)
 					else:
 						info = resp['search'][0]
-						return JsonResponse(info)
+						order_id = info['order_id']
+						url = "/order/"+ str(order_id)
+						return HttpResponseRedirect(url)
 				else:
-					obj = 'Trip'
+					if search_field == "Trip":
+						obj = 'Trip'
+					else:
+						obj = 'Order'
 					return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 			except:
 				return render(request, 'index.html', context={'error': resp['error']})
