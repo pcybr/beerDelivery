@@ -14,7 +14,7 @@ class TestOrder(TestCase):
 
 		
 
-		Order.objects.create(buyer=Person.objects.create(name='Peter',age=20,person_id=200,username='Nic',password='yes'),item=Beer.objects.create(name='Bud Light',size=100,beer_id=1,bottle_type='Can',beer_type='Light',price=12),order_id=17)
+		Order.objects.create(buyer=Person.objects.create(name='Peter',age=20,person_id=280,username='Nic',password='yes'),item=Beer.objects.create(name='Bud Light',size=100,beer_id=1,bottle_type='Can',beer_type='Light',price=12),order_id=17, order_trip=Trip.objects.create(trip_id=12,runner=Person.objects.create(name='John',age=20,person_id=208,username='John',password='yes'),store=Store.objects.create(store_id=2,location='New York',name='Heaven'),active=True))
 		
 		pass #nothing to set up 
 
