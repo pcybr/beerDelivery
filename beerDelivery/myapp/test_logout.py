@@ -11,12 +11,12 @@ class TestLogout(TestCase):
 
 	def setUp(self):
 		Person.objects.create(name='Peter',age=20,person_id=200,username='Nic',password=make_password('nic'))
-		# Authenticator.objects.create(auth = "")
+		Authenticator.objects.create(auth = "Peter",name='Peter',user_id=200)
 		
 		pass #nothing to set up 
 
 	def test_good_logout(self):
-		self.client.post('/api/v1/login',{'username' : "Nic", 'password':'nic'})
+		self.client.post('/api/v1/login',{'username' : "Nic", 'password':make_password('nic'),'auth_cookie':'Peter'})
 		response = self.client.post('/api/v1/logout')
 		resp = json.loads((response.content).decode("utf-8"))
 		self.assertEquals(resp['status'], 400)

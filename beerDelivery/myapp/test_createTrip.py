@@ -10,7 +10,7 @@ class TestCreateTrip(TestCase):
 
 	def setUp(self):
 		Person.objects.create(name='Peter',age=20,person_id=200,username='Nic',password='yes')
-		Store.objects.create(store_id=2,location='New York',inventory='Everything',name='Heaven')
+		Store.objects.create(store_id=2,location='New York',name='Heaven')
 		pass #nothing to set up 
 
 	def test_createTrip_good(self):

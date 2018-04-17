@@ -78,7 +78,7 @@ def ApiStoreGetView(request, pk=None):
 
 			return JsonResponse({'name':name,'inventory':inventory, 'location':location})
 		except:
-			return JsonResponse({'error': 404, 'message': store})
+			return JsonResponse({'error': 404, 'message': "Couldn't get store"})
 	else:
 		store = Store.objects.get(pk=pk)
 		form = StoreForm(request.POST)
@@ -143,7 +143,7 @@ def ApiOrderGetView(request, pk=None):
 			order_trip = order.order_trip.trip_id
 			return JsonResponse({'order':order.order_id,'buyer':buyer, 'item':item,'order_trip':order_trip})
 		except:
-			return JsonResponse({'error': order, 'message': 'Order does not exist'})
+			return JsonResponse({'error': 404, 'message': 'Order does not exist'})
 
 	else:
 		trip = Trip.objects.get(pk=pk)
@@ -532,7 +532,7 @@ def createOrder(request, pk = None):
 			order.save()
 			return JsonResponse({'status': 200, 'message': "Success", 'pk' : order.order_id , 'order_id' : order.order_id, 'buyer' : order.buyer.name, 'trip_id' : trip.trip_id})
 		except:
-			return JsonResponse({'status':400, 'error': trip})
+			return JsonResponse({'status':400, 'error': "Couldn't create order"})
 
 	else:
 		return JsonResponse({'error': "Not POST"})
