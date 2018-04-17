@@ -562,6 +562,9 @@ def search(request):
 						trip_id = info['trip_id']
 						url = "/trip/"+ str(trip_id)
 						return HttpResponseRedirect(url)
+					elif search_field == "Order":
+						info = resp['search'][0]
+						return JsonResponse(info)
 					else:
 						info = resp['search'][0]
 						return JsonResponse(info)

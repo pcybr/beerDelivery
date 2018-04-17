@@ -183,6 +183,10 @@ def signup(request, pk = None):
 			req = requests.post(endpoint,data=data)
 			message = str((req.content).decode())
 			ret = json.loads(message)
+			if "error" not in ret:
+				producer = KafkaProducer(bootstrap_servers='kafka:9092')
+				listing = {'name': ret['person_name'], 'username': ret['person_username'], 'person_id': ret['person_id']}
+				producer.send('person_topic', json.dumps(listing).encode('utf-8'))
 			return JsonResponse(ret)
 		except:
 			return JsonResponse({'status':401, 'message': 'Invalid Endpoint'})
@@ -222,9 +226,12 @@ def search(request):
 		search_type = data['search']
 		es = Elasticsearch(['es'])
 		if search_type == "Trip":
-			search = es.search(index='listing_index', body= {'query': {'query_string': {'query': info }}, 'size': 10})
+			search = es.search(index='listing_index_trip', body= {'query': {'query_string': {'query': info }}, 'size': 10})
+		elif search_type == "Order":
+			search = es.search(index='listing_index_order', body= {'query': {'query_string': {'query': info }}, 'size': 10})
 		else:
-			search = es.search(index='listing_index', body= {'query': {'query_string': {'query': info }}, 'size': 10})
+			search = es.search(index='listing_index_person', body= {'query': {'query_string': {'query': info }}, 'size': 10})
+
 
 		ret['status'] = 200
 		output = search['hits']['hits']

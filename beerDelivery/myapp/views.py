@@ -479,7 +479,7 @@ def signup(request,pk = None):
 				authenticator.name = person.name
 				authenticator.save()
 
-				return JsonResponse({'status': 200, 'message': "Success", 'auth':authenticator.auth,'name':authenticator.name})
+				return JsonResponse({'status': 200, 'message': "Success", 'auth':authenticator.auth,'name':authenticator.name, 'person_name': name, 'person_username': username, 'person_id': person.person_id})
 
 			return JsonResponse({'status': 400, 'error': "User already exists!"})
 
