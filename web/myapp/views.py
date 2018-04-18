@@ -589,7 +589,11 @@ def search(request):
 						obj = 'Person'
 					return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 			except:
-				return render(request, 'index.html', context={'error': resp['error']})
+				try:
+					return render(request, 'index.html', context={'error': resp['error']})
+				except:
+					return render(request, 'index.html', context={'error': 'Empty Kafka', 'auth':auth})
+
 		else:
 			return render(request, 'index.html', context={'error': request.POST})
 
