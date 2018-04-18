@@ -220,7 +220,8 @@ def ApiCreatePerson(request):
 		person.name = form.cleaned_data['name']
 		person.age = form.cleaned_data['age']
 		person.username = form.cleaned_data['username']
-		person.password = form.cleaned_data['password']
+		password = make_password(form.cleaned_data['password'])
+		person.password = password
 		person.save()
 		return redirect(person)
 	else:
