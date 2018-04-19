@@ -29,7 +29,7 @@ before_script:
   - docker start beerdelivery_models_1
 
 script:
-  - docker exec beerdelivery_models_1 bash -c "cd beerDelivery && python manage.py test"
+  - docker exec beerdelivery_models_1 bash -c "pip install requests && cd beerDelivery && python manage.py test"
 
 after_script:
   - docker-compose down
