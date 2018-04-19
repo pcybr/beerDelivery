@@ -20,7 +20,7 @@ install:
     mysql -uroot -p'$3cureUS' -h db -v -e
     "CREATE DATABASE cs4501 CHARACTER SET utf8;
     CREATE USER 'www'@'%' IDENTIFIED BY '\$3cureUS';
-    GRANT ALL PRIVILEGES ON cs4501.* TO 'www'@'%';"
+    GRANT ALL ON cs4501.* TO 'www'@'%';"
 
 before_script:
   - docker-compose up -d
