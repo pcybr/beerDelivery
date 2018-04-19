@@ -24,7 +24,8 @@ install:
 
 before_script:
   - docker-compose up -d
-  - sleep 15
+  - docker ps -a
+  - docker start beerdelivery_models_1
 
 script:
   - docker exec beerdelivery_models_1 bash -c "cd beerDelivery && python manage.py test"
