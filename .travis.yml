@@ -17,9 +17,9 @@ install:
   - >
     docker run -it --name mysql-cmdline --link mysql:db mysql:5.7.14 bash
     mysql -uroot -p'$3cureUS' -h db
-    "CREATE USER 'www'@'%' IDENTIFIED BY '$3cureUS';
-    CREATE DATABASE cs4501 CHARACTER SET utf8;
-    GRANT ALL ON cs4501.* TO 'www'@'%';"
+    "CREATE DATABASE cs4501 CHARACTER SET utf8;
+    CREATE USER 'www'@'%' IDENTIFIED BY '\$3cureUS';
+    GRANT ALL PRIVILEGES ON cs4501.* TO 'www'@'%';"
 
 before_script:
   - docker-compose up -d
