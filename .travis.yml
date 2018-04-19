@@ -8,6 +8,7 @@ services:
 
 install:
   - pip install docker-compose
+  - pip install requests
   - docker pull mysql:5.7.14
   - mkdir ~/cs4501
   - mkdir ~/cs4501/db
