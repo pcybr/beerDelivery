@@ -40,6 +40,18 @@ web:
         bash -c "pip install requests
         && mod_wsgi-express start-server --working-directory /app/web --reload-on-changes /app/web/web/wsgi.py"
 
+web_2:
+   image: tp33/django
+   links:
+      - exp:exp-api
+   ports:
+      - "8004:8000"
+   volumes:
+      - ./:/app
+   command: >
+        bash -c "pip install requests
+        && mod_wsgi-express start-server --working-directory /app/web --reload-on-changes /app/web/web/wsgi.py"
+
 kafka:
    image: spotify/kafka
    container_name: kafka
@@ -83,4 +95,15 @@ selenium-test:
   volumes:
     - ./app/selenium:/app
   command: bash -c "pip install selenium==2.48 && python /app/tests.py"
+
+haproxy_load_balance:
+    image: ntuz/my-haproxy
+    container_name: haproxy_load_balance
+    volumes:
+        - ./haproxy:/app
+    links:
+        - web:web
+        - web_2:web_2
+    ports:
+        - "80:80"
 
