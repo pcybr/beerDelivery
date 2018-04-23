@@ -9,7 +9,9 @@ services:
 install:
   - pip install docker-compose
   - pip install requests
+  - pip install selenium
   - docker pull mysql:5.7.14
+  - docker pull haproxy:1.7
   - mkdir ~/cs4501
   - mkdir ~/cs4501/db
   - >
@@ -29,7 +31,7 @@ before_script:
   - docker start beerdelivery_models_1
 
 script:
-  - docker exec beerdelivery_models_1 bash -c "pip install requests && cd beerDelivery && python manage.py test"
+  - docker exec beerdelivery_models_1 bash -c "pip install requests && cd beerDelivery && python manage.py test && pip install selenium==2.48 && python /app/tests.py"
 
 after_script:
   - docker-compose down
