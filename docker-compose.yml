@@ -77,6 +77,25 @@ batch:
    command: >
           bash -c "python script.py & python script2.py & python script3.py"
 
+
+selenium-chrome:
+  image: selenium/standalone-chrome
+  container_name: selenium-chrome
+  links:
+    - web:web
+  ports:
+    - "4444:4444"
+
+selenium-test:
+  image: tp33/django
+  container_name: selenium-test
+  links:
+    - selenium-chrome:selenium-chrome
+    - web:web
+  volumes:
+    - ./app/selenium:/app
+  command: bash -c "pip install selenium==2.48 && python /app/tests.py"
+
 haproxy_load_balance:
     image: ntuz/my-haproxy
     container_name: haproxy_load_balance
