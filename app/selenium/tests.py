@@ -50,17 +50,25 @@ class web_tests(unittest.TestCase):
 		driver = webdriver.Remote(
 		command_executor='http://selenium-chrome:4444/wd/hub',
 		desired_capabilities=DesiredCapabilities.CHROME)		
-		driver.get("http://web:8000/login/")
+		driver = webdriver.Remote(
+		command_executor='http://selenium-chrome:4444/wd/hub',
+		desired_capabilities=DesiredCapabilities.CHROME)		
+		driver.get("http://web:8000/signup/")
+		name = driver.find_element_by_id("id_name")
+		name.send_keys('tester_pete')
+		age = driver.find_element_by_id("id_age")
+		age.send_keys(22)
 		username = driver.find_element_by_id("id_username")
-		username.send_keys('pete')
+		username.send_keys('tester_pete')
 		password = driver.find_element_by_id('id_password')
-		password.send_keys('pete')
+		password.send_keys('tester_pete')
+		driver.find_element_by_id("button").click()
 		driver.find_element_by_id('login').click()
 		driver.find_element_by_id('createTrip').click()
 		driver.find_element_by_id('createTripButton').click()
 
 		search = driver.find_element_by_id('navSearch')
-		search.send_keys('pete')
+		search.send_keys('tester_pete')
 		driver.find_element_by_id("navSearchSubmit").click()
 		result = driver.find_element_by_id("matchingTrips")
 		if result == "Matching Trips:":
