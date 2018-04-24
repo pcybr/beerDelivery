@@ -33,7 +33,6 @@ before_script:
 
 script:
   - docker exec beerdelivery_models_1 bash -c "pip install requests && cd beerDelivery && python manage.py test"
-  - docker exec selenium-test bash -c "ls && pip install selenium==2.48 && python tests.py"
 
 after_script:
   - docker-compose down
