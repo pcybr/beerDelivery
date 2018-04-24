@@ -31,7 +31,7 @@ before_script:
   - docker start beerdelivery_models_1
 
 script:
-  - docker exec beerdelivery_models_1 bash -c "pip install requests && cd beerDelivery && python manage.py test && cd .. && cd app/ && ls && pip install selenium==2.48 && python tests.py"
+  - docker exec beerdelivery_models_1 bash -c "pip install requests && cd beerDelivery && python manage.py test && cd .. && cd app/selenium/ && ls && pip install selenium==2.48 && python tests.py"
 
 after_script:
   - docker-compose down
