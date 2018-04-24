@@ -9,7 +9,9 @@ services:
 install:
   - pip install docker-compose
   - pip install requests
+  - pip install selenium
   - docker pull mysql:5.7.14
+  - docker pull haproxy:1.7
   - mkdir ~/cs4501
   - mkdir ~/cs4501/db
   - >
@@ -25,6 +27,7 @@ install:
 
 before_script:
   - docker-compose up -d
+  - sleep 15
   - docker ps -a
   - docker start beerdelivery_models_1
 
