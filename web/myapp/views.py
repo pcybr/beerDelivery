@@ -69,6 +69,7 @@ def getPerson(request,pk = None):
 @login_required
 def getOrder(request,pk = None):
 	try:
+		return HttpResponse(request.GET.copy())
 		auth = request.COOKIES.get('auth')
 		endpoint = "http://exp-api:8000/order/" + str(pk)
 		req = urllib.request.Request(endpoint)
