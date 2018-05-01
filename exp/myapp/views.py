@@ -52,15 +52,6 @@ def getBeer(request,pk = None):
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
 	data = json.loads(response)
-	if "error" not in ret:
-		end2 = "http://models-api:8000/api/v1/getMyPK"
-		req2 = urllib.request.Request(end2)
-		resp2 = urllib.request.urlopen(req2).read().decode('utf-8')
-		data2 = json.loads(response2)
-		producer = KafkaProducer(bootstrap_servers='kafka:9092')
-		listing = {'user_id':data2['user_id'], 'item_id':pk}
-		#listing = {'runner':ret['runner'],'store': ret['store'],'trip_id': ret['trip_id']}
-		producer.send('recommendation_topic', json.dumps(listing).encode('utf-8'))
 	return JsonResponse(data)
 
 def getTrip(request,pk = None):
@@ -71,6 +62,15 @@ def getTrip(request,pk = None):
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
 	data = json.loads(response)
+	if "error" not in ret:
+		end2 = "http://models-api:8000/api/v1/getMyPK"
+		req2 = urllib.request.Request(end2)
+		resp2 = urllib.request.urlopen(req2).read().decode('utf-8')
+		data2 = json.loads(response2)
+		producer = KafkaProducer(bootstrap_servers='kafka:9092')
+		listing = {'user_id':data2['user_id'], 'item_id':pk}
+		#listing = {'runner':ret['runner'],'store': ret['store'],'trip_id': ret['trip_id']}
+		producer.send('recommendation_topic', json.dumps(listing).encode('utf-8'))
 	return JsonResponse(data)
 
 def endTrip(request, pk=None):
