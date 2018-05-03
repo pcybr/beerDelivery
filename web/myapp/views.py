@@ -100,6 +100,7 @@ def getTrip(request,pk = None):
 		orders = data['orders']
 
 		url = str(pk) + "/endTrip"
+		print('here')
 
 		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth, 'url':url, 'name':name,'orders':orders})
 	except: 

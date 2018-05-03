@@ -62,7 +62,7 @@ def getTrip(request,pk = None):
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
 	data = json.loads(response)
-	if "error" not in ret:
+	if "error" not in data:
 		# end2 = "http://models-api:8000/api/v1/getMyPK"
 		# req2 = urllib.request.Request(end2)
 		# resp2 = urllib.request.urlopen(req2).read().decode('utf-8')
