@@ -3,20 +3,22 @@ import json
 
 while True:
 	try:
-		print('here')
+		# print('here')
 		consumer = KafkaConsumer('recommendation_topic', group_id='listing-index', bootstrap_servers=['kafka:9092'])
 		# consumer2 = KafkaConsumer('order_topic', group_id='listing-indexer', bootstrap_servers=['kafka:9092'])
-		print('after')
+		# print('after')
 		for index in consumer:
-			print('in')
+			# print('in')
 			listing = json.loads((index.value).decode('utf-8'))
-			print("Trip Listing",listing)
+			# print("Trip Listing",listing)
 			file = open("logging.txt","w")
-			file.write(listing['user_id'] + "\t" + listing['item_id'] + "\n")
+			# print('close')
+			file.write(str(listing['user_id']) + "\t" + str(listing['item_id']) + "\n")
 			file.close()
 
 		continue
 
-	except:
+	except Exception as e:
 		print("Error")
+		print(e)
 
