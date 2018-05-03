@@ -11,7 +11,7 @@ while True:
 			# print('in')
 			listing = json.loads((index.value).decode('utf-8'))
 			# print("Trip Listing",listing)
-			file = open("logging.txt","w")
+			file = open("logging.txt","a")
 			# print('close')
 			file.write(str(listing['user_id']) + "\t" + str(listing['item_id']) + "\n")
 			file.close()
