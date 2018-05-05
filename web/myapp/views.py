@@ -69,7 +69,6 @@ def getPerson(request,pk = None):
 @login_required
 def getOrder(request,pk = None):
 	try:
-		return HttpResponse(request.GET.copy())
 		auth = request.COOKIES.get('auth')
 		endpoint = "http://exp-api:8000/order/" + str(pk)
 		req = urllib.request.Request(endpoint)
@@ -100,12 +99,12 @@ def getTrip(request,pk = None,name=None):
 		orders = data['orders']
 
 		url = str(name) + "/endTrip"
-		print('here')
 
-		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth, 'url':url, 'name':name,'orders':orders})
+		rec_trips = data['rec_trips']
+		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth, 'url':url, 'name':name,'orders':orders,'rec_trips':rec_trips})
 	except: 
-		obj = 'Trip'
-		return render(request,'no_exist.html',context={'object':data,'auth':auth})
+		# obj = 'Trip'
+		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 
 @login_required
 def getBeer(request,pk = None):

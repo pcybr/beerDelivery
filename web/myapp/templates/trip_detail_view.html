@@ -7,11 +7,26 @@
   <p><strong>Active:</strong> {{ active }}</p> 
   <p><strong>Orders:</strong></p>
 {% for item in orders %}
-	<p><a href="../order/{{ item }}">Order</a></p>
+	<p><a href="../../order/{{ item }}">Order</a></p>
 {% endfor %}
 <br>
 {% if name == runner and active == True %}
 	<h1> <a href="{{ url }}", class="button">End Trip</a> </h1>
+{% endif %}
+
+<br>
+<br>
+<p><h4><strong>People Who Viewed this Trip Also Viewed:</strong></h4></p>
+<br>
+
+{% if rec_trips %}
+	{% for trip in rec_trips %}
+		<a href="/trip/{{ trip }}/{{ name }}"><h2>This 
+		Trip!</h2></a>
+	<br>
+	{% endfor %}
+{% else %}
+	<p>No Recommended Trips for this Trip</p>
 {% endif %}
 
 {% endblock %}

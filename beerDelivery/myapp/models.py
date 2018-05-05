@@ -110,3 +110,4 @@ class Authenticator(models.Model):
 class Recommendation(models.Model):
 	item_id = models.PositiveIntegerField()
 	recommended_trips = models.CharField(max_length=256)
+	

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
-from .models import Person, Beer, Store, Order, Trip, Authenticator
+from .models import Person, Beer, Store, Order, Trip, Authenticator, Recommendation
 from django.views.generic.edit import DeleteView
 from .forms import PersonForm, BeerForm, StoreForm, TripForm, OrderForm
 from django.views.decorators.csrf import csrf_exempt
@@ -107,8 +107,15 @@ def ApiTripGetView(request, pk=None):
 			for o in all_orders:
 				if o.order_trip.trip_id == trip.trip_id:
 					trip_orders.append(o.order_id)
+			try:
+				recommended = Recommendation.objects.get(item_id=pk)
+				rec_trips = recommended.recommended_trips
+				rec_trips = rec_trips.split(',')
 
-			return JsonResponse({'runner':runner, 'store':store, 'time':time_created, 'active':active, 'trip_id':pk, 'orders':trip_orders})
+				return JsonResponse({'runner':runner, 'store':store, 'time':time_created, 'active':active, 'trip_id':pk, 'orders':trip_orders,'rec_trips':rec_trips})
+			except:
+				rec_trips = []
+				return JsonResponse({'runner':runner, 'store':store, 'time':time_created, 'active':active, 'trip_id':pk, 'orders':trip_orders,'rec_trips':rec_trips})
 		except:
 			return JsonResponse({'error': 404, 'message': 'Trip does not exist'})
 	else:
