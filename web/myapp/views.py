@@ -304,7 +304,7 @@ def getAllTripsList():
 	new_list = data
 	full_list = []
 	for keys in new_list:
-		endpoint2 = "http://exp-api:8000/trip/" + str(keys)
+		endpoint2 = "http://exp-api:8000/trip2/" + str(keys)
 		req2 = urllib.request.Request(endpoint2)
 		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
 		data2 = json.loads(response2)
