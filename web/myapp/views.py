@@ -99,7 +99,7 @@ def getTrip(request,pk = None,name=None):
 
 		orders = data['orders']
 
-		url = str(pk) + '/' + str(name) + "/endTrip"
+		url = str(name) + "/endTrip"
 		print('here')
 
 		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth, 'url':url, 'name':name,'orders':orders})
@@ -541,18 +541,25 @@ def logout(request):
 @login_required
 def EndTrip(request,pk = None, name=None):
 	try:
+		obj = 1
 		auth = request.COOKIES.get('auth')
+		name = request.COOKIES.get('name')
+		obj = 2
 		endpoint = "http://exp-api:8000/trip/" + str(pk) + '/' + str(name) + "/endTrip"
+		obj = 5
 		req = urllib.request.Request(endpoint)
+		obj = 6
 		response = urllib.request.urlopen(req).read().decode('utf-8')
+		obj = 3
 		data = json.loads(response)
+		obj = 4
 		runner = data['runner']
 		store = data['store']
 		time_created = data['time']
 		active = data['active']
 		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth})
 	except: 
-		obj = 'Trip'
+		# obj = 'Trip'
 		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 
 @csrf_exempt

@@ -124,7 +124,7 @@ def ApiTripGetView(request, pk=None):
 		else:
 			return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
-def ApiEndTripView(request, pk):
+def ApiEndTripView(request, pk,name):
 	try:
 		trip = Trip.objects.get(pk = pk)
 		trip.active = False
