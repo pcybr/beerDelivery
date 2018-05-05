@@ -74,6 +74,16 @@ def getTrip(request,pk = None,name=None):
 		producer.send('recommendation_topic', json.dumps(listing).encode('utf-8'))
 	return JsonResponse(data)
 
+def getTrip2(request,pk = None):
+	'''
+	View Function for individual trip
+	'''
+	endpoint = "http://models-api:8000/api/v1/trip/" + str(pk)
+	req = urllib.request.Request(endpoint)
+	response = urllib.request.urlopen(req).read().decode('utf-8')
+	data = json.loads(response)
+	return JsonResponse(data)
+
 def endTrip(request, pk=None,name=None):
 	endpoint = "http://models-api:8000/api/v1/trip/" + str(pk) + '/' + str(name) + "/end"
 	req = urllib.request.Request(endpoint)
