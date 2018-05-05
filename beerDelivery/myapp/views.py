@@ -124,7 +124,7 @@ def ApiTripGetView(request, pk=None):
 		else:
 			return JsonResponse({'error': 400, 'message': 'Invalid Input'})
 
-def ApiEndTripView(request, pk):
+def ApiEndTripView(request, pk,name):
 	try:
 		trip = Trip.objects.get(pk = pk)
 		trip.active = False
@@ -574,4 +574,12 @@ def checkAuth(request):
 		return JsonResponse({'status': 400, 'error': "Didn't get the auth"})
 
 
+def getMyPk(request):
+	try:
+		name = request.COOKIES.get('name')
+		person = Person.objects.get(name=name)
 
+		return JsonResponse({'status':200, 'user_id':person.person_id})
+
+	except:
+		return JsonResponse({'status': 400, 'error': "Didn't get the auth"})

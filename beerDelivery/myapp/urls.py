@@ -34,7 +34,7 @@ urlpatterns = [
 	url(r'^api/v1/trip/(?P<pk>\d+)/delete$', views.ApiTripDeleteView, name='trip_delete'),
 	url(r'^api/v1/trip/(?P<pk>\d+)/update$', views.ApiUpdateTrip, name='trip_update'),
 	url(r'^api/v1/trip/all', views.ApiAllTrips, name='trip_all'),
-	url(r'^api/v1/trip/(?P<pk>\d+)/end$', views.ApiEndTripView, name='trip_end'),
+	url(r'^api/v1/trip/(?P<pk>\d+)/(?P<name>\w+)/end$', views.ApiEndTripView, name='trip_end'),
 
 
 	url(r'^api/v1/order/(?P<pk>\d+)$', views.ApiOrderGetView, name='order_get'),
@@ -49,6 +49,7 @@ urlpatterns = [
 	url(r'^api/v1/createOrder$', views.createOrder, name = 'createOrder'),
 	url(r'^api/v1/logout$', views.logout, name = 'logout'),
 	url(r'^api/v1/checkAuth$', views.checkAuth, name = 'check_auth'),
+	# url(r'^api/v1/getMyPK$', views.getMyPk, name= 'getPK'),
 
 
 

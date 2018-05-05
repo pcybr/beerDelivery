@@ -69,6 +69,7 @@ def getPerson(request,pk = None):
 @login_required
 def getOrder(request,pk = None):
 	try:
+		return HttpResponse(request.GET.copy())
 		auth = request.COOKIES.get('auth')
 		endpoint = "http://exp-api:8000/order/" + str(pk)
 		req = urllib.request.Request(endpoint)
@@ -83,11 +84,11 @@ def getOrder(request,pk = None):
 		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 
 @login_required
-def getTrip(request,pk = None):
+def getTrip(request,pk = None,name=None):
 	try:
 		auth = request.COOKIES.get('auth')
 		name = request.COOKIES.get('name')
-		endpoint = "http://exp-api:8000/trip/" + str(pk)
+		endpoint = "http://exp-api:8000/trip/" + str(pk) + '/' + str(name)
 		req = urllib.request.Request(endpoint)
 		response = urllib.request.urlopen(req).read().decode('utf-8')
 		data = json.loads(response)
@@ -98,7 +99,8 @@ def getTrip(request,pk = None):
 
 		orders = data['orders']
 
-		url = str(pk) + "/endTrip"
+		url = str(name) + "/endTrip"
+		print('here')
 
 		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth, 'url':url, 'name':name,'orders':orders})
 	except: 
@@ -263,18 +265,20 @@ def getMyTrips(request, pk = None):
 	new_list = data
 	full_list = {}
 	for keys in new_list:
-		endpoint2 = "http://exp-api:8000/trip/" + str(keys)
+		# endpoint2 = "http://exp-api:8000/trip/" + str(keys)
+		endpoint2 = "http://exp-api:8000/trip/" + str(keys) + '/' + str(nameToken)
 		req2 = urllib.request.Request(endpoint2)
 		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
 		data2 = json.loads(response2)
 		name = data2['runner']
 		if nameToken == name:
 			full_list[keys] = name
-	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth})
+	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth, 'name':nameToken})
 
 @login_required
 def getActiveTrips(request, pk = None):
 	auth = request.COOKIES.get('auth')
+	nameToken = request.COOKIES.get('name')
 	endpoint = "http://exp-api:8000/trip/all"
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -282,7 +286,7 @@ def getActiveTrips(request, pk = None):
 	new_list = data
 	full_list = {}
 	for keys in new_list:
-		endpoint2 = "http://exp-api:8000/trip/" + str(keys)
+		endpoint2 = "http://exp-api:8000/trip/" + str(keys)  + '/' + str(nameToken)
 		req2 = urllib.request.Request(endpoint2)
 		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
 		data2 = json.loads(response2)
@@ -290,7 +294,7 @@ def getActiveTrips(request, pk = None):
 		active = data2['active']
 		if active == True:
 			full_list[keys] = name
-	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth})
+	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth, 'name':nameToken})
 
 def getAllTripsList():
 	endpoint = "http://exp-api:8000/trip/all"
@@ -476,19 +480,25 @@ def signup(request, pk = None):
 		form = SignUpForm(request.POST)
 		if form.is_valid():
 			try:
+				error = 1
 				data = request.POST.copy()
 				username = data['username']
+				error = 4
 				endpoint = "http://exp-api:8000/signup/"
 				req = requests.post(endpoint, data = data)
 				status = req.status_code
+				error = 5
 				message = (req.content).decode()
+				error = message
 				resp = json.loads(message)
+				error = 2
 				if resp['status'] != 200:
 					form = SignUpForm()
 					error = resp['error']
 					return render(request,'signup.html',{'form':form,'error':error})
 
 				next = reverse('index')
+				error = 3
 				if 'next' in form:
 					next = form.cleaned_data.get('next')
 
@@ -499,7 +509,7 @@ def signup(request, pk = None):
 				return response
 
 			except: 
-				error = 'User already exists. Please try another username.'
+				# error = 'User already exists. Please try another username.'
 				return render(request,'signup.html',{'form':form,'error':error})
 	else:
 		form = SignUpForm()
@@ -529,20 +539,27 @@ def logout(request):
 
 @csrf_exempt
 @login_required
-def EndTrip(request,pk = None):
+def EndTrip(request,pk = None, name=None):
 	try:
+		obj = 1
 		auth = request.COOKIES.get('auth')
-		endpoint = "http://exp-api:8000/trip/" + str(pk) + "/endTrip"
+		name = request.COOKIES.get('name')
+		obj = 2
+		endpoint = "http://exp-api:8000/trip/" + str(pk) + '/' + str(name) + "/endTrip"
+		obj = 5
 		req = urllib.request.Request(endpoint)
+		obj = 6
 		response = urllib.request.urlopen(req).read().decode('utf-8')
+		obj = 3
 		data = json.loads(response)
+		obj = 4
 		runner = data['runner']
 		store = data['store']
 		time_created = data['time']
 		active = data['active']
 		return render(request,'trip_detail_view.html',context={'runner':runner,'store':store,'time_created':time_created,'active':active,'auth':auth})
 	except: 
-		obj = 'Trip'
+		# obj = 'Trip'
 		return render(request,'no_exist.html',context={'object':obj,'auth':auth})
 
 @csrf_exempt
