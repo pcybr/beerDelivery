@@ -42,26 +42,14 @@ seperated = combine.flatMapValues(lambda pair: pair)
 reversed_pairs = seperated.map(lambda pair: (pair[1],pair[0]))
 rev_grouped = reversed_pairs.groupByKey().mapValues(list)
 
-for key, value in rev_grouped.collect():
-	print('----------------------------')
-	print(key, value)
-
 counts = rev_grouped.map(lambda pair: (pair[0], len(pair[1])))
-
-for key, value in counts.collect():
-	print('----------------------------')
-	print(key, value)
 
 filtered = counts.filter(lambda pair: pair[1] > 2)
 
 #Collect all output data
 output = filtered.collect()
-for key, value in output:
-	print('----------------------------')
-	print(key, value)
 
 #Send output to mysql
-print('**********************************************************')
 db = MySQLdb.connect(host="db", user="www", passwd="$3cureUS", db="cs4501")
 
 cursor = db.cursor()
@@ -84,12 +72,10 @@ for key,value in output:
 	else:
 		dic[int(item_id2)] = str(recommended_trips2)
 
-print(dic)
 for key, value in dic.items():
 	cursor.execute("""INSERT INTO myapp_recommendation (item_id,recommended_trips) VALUES (%s,%s)""",(str(key),value))
 
 cursor.execute("""SELECT * FROM myapp_recommendation""")
-print(cursor.fetchall())
 
 cursor.close()
 db.commit()
