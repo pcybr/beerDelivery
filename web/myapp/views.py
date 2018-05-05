@@ -237,6 +237,7 @@ def getAllStoresList():
 @login_required
 def getAllTrips(request, pk = None):
 	auth = request.COOKIES.get('auth')
+	nameToken = request.COOKIES.get('name')
 	endpoint = "http://exp-api:8000/trip/all"
 	req = urllib.request.Request(endpoint)
 	response = urllib.request.urlopen(req).read().decode('utf-8')
@@ -244,13 +245,14 @@ def getAllTrips(request, pk = None):
 	new_list = data
 	full_list = {}
 	for keys in new_list:
-		endpoint2 = "http://exp-api:8000/trip/" + str(keys)
+		endpoint2 = "http://exp-api:8000/trip2/" + str(keys)
 		req2 = urllib.request.Request(endpoint2)
 		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
 		data2 = json.loads(response2)
 		name = data2['runner']
 		full_list[keys] = name
-	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth})
+	return render(request, 'trips.html', context={'full_list':full_list,'auth':auth,'name':nameToken})
+
 
 
 @login_required
@@ -304,7 +306,7 @@ def getAllTripsList():
 	new_list = data
 	full_list = []
 	for keys in new_list:
-		endpoint2 = "http://exp-api:8000/trip/" + str(keys)
+		endpoint2 = "http://exp-api:8000/trip2/" + str(keys)
 		req2 = urllib.request.Request(endpoint2)
 		response2 = urllib.request.urlopen(req2).read().decode('utf-8')
 		data2 = json.loads(response2)
@@ -399,17 +401,20 @@ def createTrip(request):
 @login_required
 #@old_cookie_logout
 def createOrder(request, pk = None):
-	name = request.COOKIES.get('name')
-	auth = request.COOKIES.get('auth')
-	next = reverse('index')
-	BEER_CHOICES = getAllBeersList()
-	TRIP_CHOICES = getAllTripsList()
-	if not auth:
-		response = HttpResponseRedirect(next)
-	if request.method == 'GET':
-		form = OrderForm(allBeers = BEER_CHOICES, allTrips = TRIP_CHOICES)
-		return render(request, 'orderForm.html', {'form':form,'auth':auth})
-	form2 = OrderCreate(beer = request.POST['beer'],trip = request.POST['trip'])
+	try:
+		name = request.COOKIES.get('name')
+		auth = request.COOKIES.get('auth')
+		next = reverse('index')
+		BEER_CHOICES = getAllBeersList()
+		TRIP_CHOICES = getAllTripsList()
+		if not auth:
+			response = HttpResponseRedirect(next)
+		if request.method == 'GET':
+			form = OrderForm(allBeers = BEER_CHOICES, allTrips = TRIP_CHOICES)
+			return render(request, 'orderForm.html', {'form':form,'auth':auth})
+		form2 = OrderCreate(beer = request.POST['beer'],trip = request.POST['trip'])
+	except:
+		return render(request, 'orderForm.html', context={'error': TRIP_CHOICES})
 	try:
 		data = request.POST.copy()
 		data['name'] = name
