@@ -5,7 +5,7 @@ urlpatterns = [
 	url(r'^index/$', views.index, name = 'index'),
 	url(r'^person/(?P<pk>\d+)$', views.getPerson, name = 'get_person'),
 	url(r'^order/(?P<pk>\d+)$', views.getOrder, name = 'get_order'),
-	url(r'^trip/(?P<pk>\d+)$', views.getTrip, name = 'get_trip'),
+	url(r'^trip/(?P<pk>\d+)/(?P<name>\w+)$', views.getTrip, name = 'get_trip'),
 	url(r'^beer/(?P<pk>\d+)$', views.getBeer, name = 'get_beer'),
 	url(r'^store/(?P<pk>\d+)$', views.getStore, name = 'get_store'),
 
@@ -23,6 +23,6 @@ urlpatterns = [
 	url(r'^checkAuth/', views.checkAuth, name = 'check_auth'),
 	url(r'^search/', views.search, name = 'search'),
 
-	url(r'^trip/(?P<pk>\d+)/endTrip$', views.endTrip, name = 'end_Trip'),	
+	url(r'^trip/(?P<pk>\d+)/(?P<name>\w+)/endTrip$', views.endTrip, name = 'end_Trip'),	
 
 ]
